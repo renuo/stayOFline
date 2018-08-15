@@ -1,0 +1,13 @@
+#!/bin/sh
+
+zip -qr palujo.zip index.html app.js styles.css ./engine/
+
+ZIP_SIZE=$(wc -c < palujo.zip)
+rm palujo.zip
+
+if [ "$ZIP_SIZE" -gt "13312" ];
+then
+  echo "File is larger than 13'312 bytes!"
+  exit 1
+fi
+
