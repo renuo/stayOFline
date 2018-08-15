@@ -6,3 +6,5 @@ git merge master
 git push
 git checkout master
 
+echo "App deployed under https://renuo.github.io/palujo/"
+
