@@ -4,10 +4,29 @@
     <title>Palujo</title>
     <meta charset="utf-8" />
     <script src="engine/Shader.js"></script>
+    <script src="engine/Program.js"></script>
+    <script src="engine/Buffer.js"></script>
+    <script src="engine/Mesh.js"></script>
     <script src="engine/Renderer.js"></script>
     <script src="engine/Game.js"></script>
     <script src="main.js"></script>
     <link rel="stylesheet" href="styles.css" />
+
+    <script type="x-shader/x-fragment" id="fragment-shader">
+        precision mediump float;
+
+        void main(void) {
+            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        }
+    </script>
+
+    <script type="x-shader/x-vertex" id="vertex-shader">
+        attribute vec4 vertices;
+
+        void main(void) {
+            gl_Position = vertices;
+        }
+    </script>
 </head>
 <body>
     <canvas id="the-game"></canvas>
