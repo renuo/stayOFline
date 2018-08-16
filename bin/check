@@ -1,9 +1,11 @@
 #!/bin/sh
 
-zip -qr palujo.zip index.html app.js styles.css ./engine/
+zip -qr palujo.zip index.html main.js styles.css ./engine/
 
 ZIP_SIZE=$(wc -c < palujo.zip)
 rm palujo.zip
+
+echo "Your current zip size is: $ZIP_SIZE bytes. [$((ZIP_SIZE / 13312))%]"
 
 if [ "$ZIP_SIZE" -gt "13312" ];
 then
