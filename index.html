@@ -3,6 +3,9 @@
 <head>
     <title>Palujo</title>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
     <script src="engine/Shader.js"></script>
     <script src="engine/Program.js"></script>
     <script src="engine/Buffer.js"></script>
@@ -18,9 +21,6 @@
         void main(void) {
             gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
         }
-
-
-
     </script>
 
     <script type="x-shader/x-vertex" id="vertex-shader">
@@ -29,7 +29,6 @@
         void main(void) {
             gl_Position = vertices;
         }
-
     </script>
 </head>
 <body>
