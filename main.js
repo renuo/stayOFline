@@ -20,7 +20,6 @@
 
   function startGame(canvas) {
     renderer = new Renderer(canvas);
-    renderer.initialize();
     game = new Game(renderer);
     resizeCanvas();
     mainLoop();
