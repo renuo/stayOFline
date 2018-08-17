@@ -4,6 +4,10 @@
   var game, canvas, renderer, startBtn;
 
   window.onload = function () {
+    document.ontouchmove = function (event) {
+      event.preventDefault();
+    };
+
     canvas = document.getElementById('the-game');
     startBtn = document.getElementById('start-btn');
     startBtn.onclick = function () {
