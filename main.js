@@ -1,17 +1,26 @@
-(function() {
+(function () {
   "use strict";
 
-  var game, canvas, renderer;
-  window.addEventListener('load', function() {
+  var game, canvas, renderer, startBtn;
+
+  window.onload = function () {
     canvas = document.getElementById('the-game');
+    startBtn = document.getElementById('start-btn');
+    startBtn.onclick = function () {
+      canvas.classList.toggle('game-stopped')
+      startGame(canvas);
+    };
+  };
+
+  window.addEventListener('resize', resizeCanvas);
+
+  function startGame(canvas) {
     renderer = new Renderer(canvas);
     renderer.initialize();
     game = new Game(renderer);
     resizeCanvas();
     mainLoop();
-  });
-
-  window.addEventListener('resize', resizeCanvas);
+  }
 
   function resizeCanvas() {
     var devicePixelRatio = window.devicePixelRatio || 1;
