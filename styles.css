@@ -1,6 +1,7 @@
 body {
     background-color: #bad;
     font-family: monospace;
+    user-select: none;
 }
 
 #the-game {
