@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var game, canvas, renderer, startBtn;
+  let game, canvas, renderer, startBtn;
 
   window.onload = function () {
     document.ontouchmove = function (event) {
@@ -11,7 +11,7 @@
     canvas = document.getElementById('the-game');
     startBtn = document.getElementById('start-btn');
     startBtn.onclick = function () {
-      canvas.classList.toggle('game-stopped')
+      canvas.classList.toggle('game-stopped');
       startGame(canvas);
     };
   };
@@ -26,8 +26,7 @@
   }
 
   function resizeCanvas() {
-    var devicePixelRatio = window.devicePixelRatio || 1;
-
+    const devicePixelRatio = window.devicePixelRatio || 1;
     canvas.width = window.innerWidth * devicePixelRatio;
     canvas.height = window.innerHeight * devicePixelRatio;
     renderer.resizeViewport();
