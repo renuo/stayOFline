@@ -1,37 +1,35 @@
-(function() {
-  "use strict";
-
-  window.Program = function(gl, vertexShader, fragmentShader) {
+class Program {
+  constructor(gl, vertexShader, fragmentShader) {
+    this.gl = gl;
     this.vertexShader = vertexShader;
     this.fragmentShader = fragmentShader;
-    this.program = gl.createProgram();
+    this.program = this.gl.createProgram();
+    this.setupProgram();
+  }
 
-    this.initialize = function() {
-      gl.attachShader(this.program, this.vertexShader.shader);
-      gl.attachShader(this.program, this.fragmentShader.shader);
-      gl.linkProgram(this.program);
-
-      if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
-        var programLog = gl.getProgramInfoLog(this.program);
-        this.tearDown();
-        throw new Error(programLog);
-      }
-    };
-
-    this.bind = function() {
-      gl.useProgram(this.program);
-    };
-
-    this.unbind = function() {
-      gl.useProgram(null);
-    };
-
-    this.tearDown = function() {
-      gl.deleteProgram(this.program);
-      gl.deleteShader(this.vertexShader.shader);
-      gl.deleteShader(this.fragmentShader.shader);
-    };
-
-    this.initialize();
+  bind() {
+    this.gl.useProgram(this.program);
   };
-})();
+
+  unbind() {
+    this.gl.useProgram(null);
+  };
+
+  tearDown() {
+    this.gl.deleteProgram(this.program);
+    this.gl.deleteShader(this.vertexShader);
+    this.gl.deleteShader(this.fragmentShader);
+  };
+
+  setupProgram() {
+    this.gl.attachShader(this.program, this.vertexShader);
+    this.gl.attachShader(this.program, this.fragmentShader);
+    this.gl.linkProgram(this.program);
+
+    if (!this.gl.getProgramParameter(this.program, this.gl.LINK_STATUS)) {
+      const programLog = this.gl.getProgramInfoLog(this.program);
+      this.tearDown();
+      throw new Error(programLog);
+    }
+  }
+}
