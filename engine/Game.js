@@ -1,16 +1,14 @@
-(function() {
-  "use strict";
-
-  window.Game = function(renderer) {
+class Game {
+  constructor(renderer) {
     this.renderer = renderer;
+  }
 
-    this.update = function () {
-
-    };
-
-    this.loop = function() {
-      this.update();
-      this.renderer.render();
-    };
+  loop() {
+    this.update();
+    this.renderer.render();
   };
-})();
+
+  update() {
+    // game state change happens here
+  }
+}
