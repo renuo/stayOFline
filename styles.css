@@ -1,7 +1,45 @@
+body {
+    background-color: #bad;
+    font-family: monospace;
+}
+
 #the-game {
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
+}
+
+h1 {
+    color: #fff;
+    font-size: 5em;
+    text-align: center;
+}
+
+.game-stopped {
+    display: none;
+}
+
+.btn {
+    position: relative;
+    color: #fff;
+    text-decoration: none;
+    background-color: #4caf50;
+    font-weight: 700;
+    font-size: 3em;
+    display: block;
+    padding: 4px;
+    box-shadow: 0 9px 0 #4caf50db, 0 10px 30px #000;
+    margin: 100px auto;
+    width: 80%;
+    text-align: center;
+
+    transition: all .1s ease;
+}
+
+.btn:active {
+    box-shadow: 0 3px 0 #4caf50, 0 3px 6px #000;
+    position: relative;
+    top: 6px;
 }
