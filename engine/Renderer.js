@@ -21,9 +21,7 @@ class Renderer {
   };
 
   setupWorld() {
-    const vertexShader = new Shader(this.gl, 'vertex-shader');
-    const fragmentShader = new Shader(this.gl, 'fragment-shader');
-    this.program = new Program(this.gl, vertexShader.shader, fragmentShader.shader);
+    this.program = new Program(this.gl, 'vertex-shader', 'fragment-shader');
 
     this.mesh = new Mesh(this.gl, this.program, new Buffer(this.gl, new Float32Array([
       -1.0, -1.0, 0.0,
