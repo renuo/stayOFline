@@ -1,41 +1,29 @@
-(function() {
-  "use strict";
+class Shader {
+  constructor(gl, id) {
+    this.gl = gl;
 
-  function getShader(gl, id){
-    var shaderScript = document.getElementById(id);
-    if (!gl || !id || !shaderScript)
-      return null;
+    const shaderElement = document.getElementById(id);
+    const shaderSource = shaderElement.text;
 
-    var str = '';
-    var k = shaderScript.firstChild;
-    while (k) {
-      if (k.nodeType === 3)
-        str += k.textContent;
-
-      k = k.nextSibling;
+    if (shaderElement.type === "x-shader/x-fragment") {
+      this.shader = this.createShader(this.gl.FRAGMENT_SHADER, shaderSource);
     }
 
-    var shader;
-    if (shaderScript.type === "x-shader/x-fragment")
-      shader = gl.createShader(gl.FRAGMENT_SHADER);
-    else if (shaderScript.type === "x-shader/x-vertex")
-      shader = gl.createShader(gl.VERTEX_SHADER);
-    else
-      return null;
-
-    gl.shaderSource(shader, str);
-    gl.compileShader(shader);
-
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      alert(gl.getShaderInfoLog(shader));
-      gl.deleteShader(shader);
-      return null;
+    if (shaderElement.type === "x-shader/x-vertex") {
+      this.shader = this.createShader(this.gl.VERTEX_SHADER, shaderSource);
     }
-
-    return shader;
   }
 
-  window.Shader = function(gl, id) {
-    this.shader = getShader(gl, id);
-  };
-})();
+  createShader(type, source) {
+    const shader = this.gl.createShader(type);
+    this.gl.shaderSource(shader, source);
+    this.gl.compileShader(shader);
+
+    if (this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
+      return shader
+    }
+
+    console.log(this.gl.getShaderInfoLog(shader));
+    this.gl.deleteShader(shader);
+  }
+}
