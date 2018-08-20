@@ -1,29 +1,15 @@
-class Shader {
-  constructor(gl, id) {
-    this.gl = gl;
+const createShader = function(gl, id) {
+  const shaderElement = document.getElementById(id);
+  const shaderSource = shaderElement.text;
 
-    const shaderElement = document.getElementById(id);
-    const shaderSource = shaderElement.text;
+  const shader = gl.createShader(shaderElement.type === "x-shader/x-fragment" ? gl.FRAGMENT_SHADER : gl.VERTEX_SHADER);
+  gl.shaderSource(shader, shaderSource);
+  gl.compileShader(shader);
 
-    if (shaderElement.type === "x-shader/x-fragment") {
-      this.shader = this.createShader(this.gl.FRAGMENT_SHADER, shaderSource);
-    }
-
-    if (shaderElement.type === "x-shader/x-vertex") {
-      this.shader = this.createShader(this.gl.VERTEX_SHADER, shaderSource);
-    }
+  if (gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    return shader;
   }
 
-  createShader(type, source) {
-    const shader = this.gl.createShader(type);
-    this.gl.shaderSource(shader, source);
-    this.gl.compileShader(shader);
-
-    if (this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
-      return shader
-    }
-
-    console.log(this.gl.getShaderInfoLog(shader));
-    this.gl.deleteShader(shader);
-  }
-}
+  console.error(gl.getShaderInfoLog(shader));
+  gl.deleteShader(shader);
+};

@@ -1,8 +1,8 @@
 class Program {
-  constructor(gl, vertexShader, fragmentShader) {
+  constructor(gl, vertexShaderId, fragmentShaderId) {
     this.gl = gl;
-    this.vertexShader = vertexShader;
-    this.fragmentShader = fragmentShader;
+    this.vertexShader = createShader(gl, vertexShaderId);
+    this.fragmentShader = createShader(gl, fragmentShaderId);
     this.program = this.gl.createProgram();
     this.setupProgram();
   }
