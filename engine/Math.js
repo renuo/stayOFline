@@ -1,47 +1,47 @@
 (function() {
   "use strict";
 
-  window.GLMath = function () {
-    this.degToRad = function(deg) {
+  window.GLMath = {
+    degToRad: function(deg) {
       return deg * Math.PI / 180;
-    };
+    },
 
-    this.projectionMatrix = function(viewAngle, zNear, zFar, aspectRatio) {
-      viewAngle = viewAngle * Math.PI / 180;
+    projectionMatrix: function(viewAngle, zNear, zFar, aspectRatio) {
+      viewAngle = GLMath.degToRad(viewAngle);
       return new Float32Array([
         aspectRatio/Math.tan(viewAngle), 0, 0, 0,
         0, 1/Math.tan(viewAngle), 0, 0,
         0, 0, (zNear+zFar)/(zNear-zFar), -1,
         0, 0, 2*zNear*zFar/(zNear-zFar), 0
       ]);
-    };
+    },
 
-    this.matrix4 = function() {
+    matrix4: function() {
       return new Float32Array(16);
-    };
+    },
 
-    this.matrix3 = function() {
+    matrix3: function() {
       return new Float32Array(9);
-    };
+    },
 
-    this.matrix3Identity = function() {
+    matrix3Identity: function() {
       return new Float32Array([
         1, 0, 0,
         0, 1, 0,
         0, 0, 1
       ]);
-    };
+    },
 
-    this.matrix4Identity = function() {
+    matrix4Identity: function() {
       return new Float32Array([
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
         0, 0, 0, 1
       ]);
-    };
+    },
 
-    this.matrix4ConvertToInversedMatrix3 = function(mat) {
+    matrix4ConvertToInversedMatrix3: function(mat) {
       var a00 = mat[0], a01 = mat[1], a02 = mat[2],
           a10 = mat[4], a11 = mat[5], a12 = mat[6],
           a20 = mat[8], a21 = mat[9], a22 = mat[10];
@@ -51,7 +51,7 @@
           b21 =  a21 * a10 - a11 * a20;
 
       var d = a00 * b01 + a01 * b11 + a02 * b21, id;
-      var out = this.matrix3();
+      var out = GLMath.matrix3();
 
       if (!d)
         return null;
@@ -69,20 +69,20 @@
       out[8] = (a11 * a00 - a01 * a10) * id;
 
       return out;
-    };
+    },
 
-    this.matrix4MultiplyWithScalar = function(factor, mat) {
-      var out = this.matrix4();
+    matrix4MultiplyWithScalar: function(factor, mat) {
+      var out = GLMath.matrix4();
 
       for (var i = 0; i < mat.length; ++i) {
         out[i] = factor * mat[i];
       }
 
       return out;
-    };
+    },
 
-    this.matrix4Rotate = function(mat, angle, axis) {
-      var out = this.matrix4();
+    matrix4Rotate: function(mat, angle, axis) {
+      var out = GLMath.matrix4();
       var x = axis[0], y = axis[1], z = axis[2],
         len = Math.sqrt(x * x + y * y + z * z),
         s, c, t,
@@ -135,9 +135,25 @@
       out[11] = a03 * b20 + a13 * b21 + a23 * b22;
 
       return out;
-    };
+    },
 
-    this.matrix4Transpose = function(mat) {
+    matrix4Translate: function(mat, byVec) {
+      const d = byVec[0];
+      const e = byVec[1];
+      const b = byVec[2];
+
+      return new Float32Array([
+        mat[0], mat[1], mat[2], mat[3],
+        mat[4], mat[5], mat[6], mat[7],
+        mat[8], mat[9], mat[10], mat[11],
+        mat[0] * d + mat[4] * e + mat[8] * b + mat[12],
+        mat[1] * d + mat[5] * e + mat[9] * b + mat[13],
+        mat[2] * d + mat[6] * e + mat[10] * b + mat[14],
+        mat[3] * d + mat[7] * e + mat[11] * b + mat[15]
+      ]);
+    },
+
+    matrix4Transpose: function(mat) {
       var a01 = mat[1], a02 = mat[2], a03 = mat[3],
         a12 = mat[6], a13 = mat[7],
         a23 = mat[11];
@@ -148,9 +164,9 @@
         mat[2], mat[6], mat[10], mat[14],
         mat[3], mat[7], mat[11], mat[15]
       ]);
-    };
+    },
 
-    this.matrix4Determinant = function(mat) {
+    matrix4Determinant: function(mat) {
       var a00 = mat[0], a01 = mat[1], a02 = mat[2], a03 = mat[3],
         a10 = mat[4], a11 = mat[5], a12 = mat[6], a13 = mat[7],
         a20 = mat[8], a21 = mat[9], a22 = mat[10], a23 = mat[11],
@@ -162,10 +178,10 @@
         a30 * a11 * a02 * a23 - a10 * a31 * a02 * a23 - a30 * a01 * a12 * a23 + a00 * a31 * a12 * a23 +
         a10 * a01 * a32 * a23 - a00 * a11 * a32 * a23 - a20 * a11 * a02 * a33 + a10 * a21 * a02 * a33 +
         a20 * a01 * a12 * a33 - a00 * a21 * a12 * a33 - a10 * a01 * a22 * a33 + a00 * a11 * a22 * a33);
-    };
+    },
 
-    this.matrix4Inverse = function(mat) {
-      var out = this.matrix4();
+    matrix4Inverse: function(mat) {
+      var out = GLMath.matrix4();
 
       var a00 = mat[0], a01 = mat[1], a02 = mat[2], a03 = mat[3],
         a10 = mat[4], a11 = mat[5], a12 = mat[6], a13 = mat[7],
@@ -203,9 +219,9 @@
       out[15] = (a20 * b03 - a21 * b01 + a22 * b00) * invDet;
 
       return out;
-    };
+    },
 
-    this.matrix4MultiplyWithMatrix = function(mat, mat2) {
+    matrix4MultiplyWithMatrix: function(mat, mat2) {
       var a00 = mat[0], a01 = mat[1], a02 = mat[2], a03 = mat[3],
         a10 = mat[4], a11 = mat[5], a12 = mat[6], a13 = mat[7],
         a20 = mat[8], a21 = mat[9], a22 = mat[10], a23 = mat[11],
@@ -233,9 +249,9 @@
         b30 * a02 + b31 * a12 + b32 * a22 + b33 * a32,
         b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33
       ]);
-    };
+    },
 
-    this.matrix4ScaleWithVector = function(mat, vec, dest) {
+    matrix4ScaleWithVector: function(mat, vec, dest) {
       var x = vec[0], y = vec[1], z = vec[2];
 
       return new Float32Array([
@@ -245,10 +261,10 @@
         mat[9] * z, mat[10] * z, mat[11] * z,
         mat[12], mat[13], mat[14], mat[15]
       ]);
-    };
+    },
 
-    this.matrix4LookAtPoint = function(eye, center, up) {
-      var out = this.matrix4();
+    matrix4LookAtPoint: function(eye, center, up) {
+      var out = GLMath.matrix4();
 
       var x0, x1, x2, y0, y1, y2, z0, z1, z2, len,
         eyex = eye[0],
@@ -262,7 +278,7 @@
         centerz = center[2];
 
       if (eyex === centerx && eyey === centery && eyez === centerz) {
-        return this.matrix4Identity(out);
+        return GLMath.matrix4Identity(out);
       }
 
       z0 = eyex - center[0];
@@ -323,6 +339,6 @@
       out[15] = 1;
 
       return out;
-    };
+    }
   };
 })();
