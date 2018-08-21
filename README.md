@@ -13,9 +13,9 @@ can check if we meet this requirement by running
     
 ## Contributors
 
-![Pascal Andermatt]()
-![Josua Schmid]()
-![Lukas Bischof]()
+- Pascal Andermatt
+- Josua Schmid
+- Lukas Bischof
 
 
 ## Copyright
