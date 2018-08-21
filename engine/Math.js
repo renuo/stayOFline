@@ -6,6 +6,10 @@
       return deg * Math.PI / 180;
     },
 
+    radToDeg: function(rad) {
+        return rad * 180 / Math.PI;
+    },
+
     projectionMatrix: function(viewAngle, zNear, zFar, aspectRatio) {
       viewAngle = GLMath.degToRad(viewAngle);
       return new Float32Array([
@@ -79,14 +83,8 @@
       ]);
     },
 
-    matrix4MultiplyWithScalar: function(factor, mat) {
-      var out = GLMath.matrix4();
-
-      for (var i = 0; i < mat.length; ++i) {
-        out[i] = factor * mat[i];
-      }
-
-      return out;
+    matrix4MultiplyWithScalar: function(mat, factor) {
+      return mat.map(i => i * factor);
     },
 
     matrix4Rotate: function(mat, angle, axis) {
@@ -151,9 +149,7 @@
       const b = byVec[2];
 
       return new Float32Array([
-        mat[0], mat[1], mat[2], mat[3],
-        mat[4], mat[5], mat[6], mat[7],
-        mat[8], mat[9], mat[10], mat[11],
+        ...mat.slice(0, 12),
         mat[0] * d + mat[4] * e + mat[8] * b + mat[12],
         mat[1] * d + mat[5] * e + mat[9] * b + mat[13],
         mat[2] * d + mat[6] * e + mat[10] * b + mat[14],
@@ -162,10 +158,6 @@
     },
 
     matrix4Transpose: function(mat) {
-      var a01 = mat[1], a02 = mat[2], a03 = mat[3],
-        a12 = mat[6], a13 = mat[7],
-        a23 = mat[11];
-
       return new Float32Array([
         mat[0], mat[4], mat[8], mat[12],
         mat[1], mat[5], mat[9], mat[13],
@@ -263,10 +255,9 @@
       var x = vec[0], y = vec[1], z = vec[2];
 
       return new Float32Array([
-        mat[0] * x, mat[1] * x,  mat[2] * x,
-        mat[3] * x, mat[4] * y,  mat[5] * y,
-        mat[6] * y, mat[7] * y,  mat[8] * z,
-        mat[9] * z, mat[10] * z, mat[11] * z,
+        mat[0] * x, mat[1] * x, mat[2] * x, mat[3] * x,
+        mat[4] * y, mat[5] * y, mat[6] * y, mat[7] * y,
+        mat[8] * z, mat[9] * z, mat[10] * z, mat[11] * z,
         mat[12], mat[13], mat[14], mat[15]
       ]);
     },
