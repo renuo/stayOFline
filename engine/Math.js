@@ -71,6 +71,14 @@
       return out;
     },
 
+    matrix4ConvertToMatrix3: function(mat) {
+      return new Float32Array([
+        mat[0], mat[1], mat[2],
+        mat[4], mat[5], mat[6],
+        mat[8], mat[9], mat[10]
+      ]);
+    },
+
     matrix4MultiplyWithScalar: function(factor, mat) {
       var out = GLMath.matrix4();
 

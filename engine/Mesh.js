@@ -1,17 +1,25 @@
 class Mesh {
-  constructor(gl, program, verticesBuffer, indicesBuffer) {
+  constructor(gl, program, verticesBuffer, indicesBuffer, normalsBuffer) {
     this.gl = gl;
     this.verticesBuffer = verticesBuffer;
     this.indicesBuffer = indicesBuffer;
+    this.normalsBuffer = normalsBuffer;
     this.program = program;
     this.transformationMatrix = GLMath.matrix4();
 
     this.program.bind(() => {
-      this.verticesBuffer.bind(() => {
-        this.describeVertexBufferLayout();
-      });
-
       this.uniformLocations = this.retrieveUniformLocations();
+      this.describeBufferLayout();
+    });
+  }
+
+  describeBufferLayout() {
+    this.verticesBuffer.bind(() => {
+      this.describeVertexBufferLayout();
+    });
+
+    this.normalsBuffer.bind(() => {
+      this.describeNormalsBufferLayout();
     });
   }
 
@@ -19,6 +27,12 @@ class Mesh {
     const verticesLocation = this.gl.getAttribLocation(this.program.program, 'vertices');
     this.gl.vertexAttribPointer(verticesLocation, this.verticesBuffer.itemSize, this.gl.FLOAT, false, 0, 0);
     this.gl.enableVertexAttribArray(verticesLocation);
+  }
+
+  describeNormalsBufferLayout() {
+    const normalsLocation = this.gl.getAttribLocation(this.program.program, 'normals');
+    this.gl.vertexAttribPointer(normalsLocation, this.normalsBuffer.itemSize, this.gl.FLOAT, false, 0, 0);
+    this.gl.enableVertexAttribArray(normalsLocation);
   }
 
   retrieveUniformLocations() {
@@ -42,7 +56,6 @@ class Mesh {
   }
 
   bind(block) {
-    this.verticesBuffer.bind();
     this.indicesBuffer.bind();
 
     if (block) {
@@ -52,7 +65,6 @@ class Mesh {
   };
 
   unbind() {
-    this.verticesBuffer.unbind();
     this.indicesBuffer.unbind();
   };
 
