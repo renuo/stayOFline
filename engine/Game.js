@@ -1,15 +1,16 @@
 class Game {
   constructor(renderer) {
     this.renderer = renderer;
+    this.program = new Program(renderer.gl, 'vertex-shader', 'fragment-shader');
+    this.glifyMesh = meshFactory(renderer.gl, this.program);
     this.setupWorld();
     this.startTime = (new Date()).getTime();
     this.lastFrame = this.startTime;
   }
 
   setupWorld() {
-    this.program = new Program(this.renderer.gl, 'vertex-shader', 'fragment-shader');
     this.camera = new Camera();
-    this.mesh = new Cube(this.renderer.gl, this.program);
+    this.mesh = this.glifyMesh(new Cuboid(2, 2, 2));
   }
 
   loop() {

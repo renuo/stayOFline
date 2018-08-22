@@ -13,3 +13,12 @@ const createShader = function(gl, id) {
   console.error(gl.getShaderInfoLog(shader));
   gl.deleteShader(shader);
 };
+
+const meshFactory = function(gl, program) {
+  return (meshConfig) => {
+    const verticesBuffer = new VerticesBuffer(gl, new Float32Array(meshConfig.vertices));
+    const indicesBuffer = new IndicesBuffer(gl, new Uint8Array(meshConfig.vertexIndices));
+
+    return new Mesh(gl, program, verticesBuffer, indicesBuffer);
+  }
+};
