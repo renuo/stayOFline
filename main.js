@@ -11,6 +11,7 @@
     canvas = document.getElementById('the-game');
     startBtn = document.getElementById('start-btn');
     startBtn.onclick = function () {
+      startMusic();
       canvas.classList.toggle('game-stopped');
       startGame(canvas);
     };
