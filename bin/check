@@ -5,7 +5,8 @@ zip -qr palujo.zip index.html main.js styles.css ./engine/ ./theme/
 ZIP_SIZE=$(wc -c < palujo.zip)
 rm palujo.zip
 
-echo "Your current zip size is: $ZIP_SIZE bytes. [$((ZIP_SIZE / 13312))%]"
+PERCENTAGE=$(expr 100 \* $ZIP_SIZE / 13312)
+echo "Your current zip size is: $ZIP_SIZE bytes. [$PERCENTAGE%]"
 
 if [ "$ZIP_SIZE" -gt "13312" ];
 then
