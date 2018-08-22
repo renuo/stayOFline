@@ -2,7 +2,7 @@
 
 zip -qr palujo.zip index.html main.js styles.css ./engine/ ./theme/
 
-ZIP_SIZE=$(wc -c < palujo.zip | awk '{print $1}')
+ZIP_SIZE=$(wc -c < palujo.zip)
 rm palujo.zip
 
 PERCENTAGE=$(expr 100 \* $ZIP_SIZE / 13312)
