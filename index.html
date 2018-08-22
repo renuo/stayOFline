@@ -12,6 +12,7 @@
     <script src="engine/Buffer.js"></script>
     <script src="engine/VerticesBuffer.js"></script>
     <script src="engine/IndicesBuffer.js"></script>
+    <script src="engine/NormalsBuffer.js"></script>
     <script src="engine/Camera.js"></script>
     <script src="engine/Mesh.js"></script>
     <script src="engine/Cube.js"></script>
@@ -24,19 +25,43 @@
     <script type="x-shader/x-fragment" id="fragment-shader">
         precision mediump float;
 
+        varying vec3 lightDirection;
+        varying vec3 modelNormals;
+        varying vec4 modelPosition;
+
+        uniform vec3 lightColor;
+
         void main(void) {
-            gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+            vec3 normalizedLightVector = normalize(lightDirection);
+            float diffuseWeight = max(dot(modelNormals, normalizedLightVector), 0.0);
+            vec3 totalDiffuse = diffuseWeight * lightColor;
+            vec3 modelColor = vec3(1.0, 0.0, 0.0);
+
+            gl_FragColor = vec4(modelColor * totalDiffuse, 1.0);
         }
     </script>
 
     <script type="x-shader/x-vertex" id="vertex-shader">
-        attribute vec4 vertices;
+        attribute vec3 vertices;
+        attribute vec3 normals;
+
+        varying vec3 lightDirection;
+        varying vec3 modelNormals;
+        varying vec4 modelPosition;
+
         uniform mat4 projectionMatrix;
         uniform mat4 viewMatrix;
         uniform mat4 modelMatrix;
+        uniform mat3 normalMatrix;
+        uniform vec3 lightPosition;
 
         void main(void) {
-            gl_Position = projectionMatrix * viewMatrix * modelMatrix * vertices;
+            vec4 worldPosition = modelMatrix * vec4(vertices, 1.0);
+            modelPosition = viewMatrix * worldPosition;
+            lightDirection = (viewMatrix * vec4(lightPosition, 1.0)).xyz - modelPosition.xyz;
+            modelNormals = normalMatrix * normals;
+
+            gl_Position = projectionMatrix * modelPosition;
         }
     </script>
 </head>

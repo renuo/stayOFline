@@ -3,6 +3,7 @@ class Buffer {
     this.gl = gl;
     this.buffer = this.gl.createBuffer();
     this.type = type || this.gl.ARRAY_BUFFER;
+    this.data = data;
 
     this.bind(() => {
       this.gl.bufferData(this.type, data, this.gl.STATIC_DRAW);
