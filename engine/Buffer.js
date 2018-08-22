@@ -1,19 +1,25 @@
 class Buffer {
-  constructor(gl, data) {
+  constructor(gl, data, type) {
     this.gl = gl;
-    this.data = data;
     this.buffer = this.gl.createBuffer();
-    this.bind();
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, this.data, this.gl.STATIC_DRAW);
-    this.unbind();
+    this.type = type || this.gl.ARRAY_BUFFER;
+
+    this.bind(() => {
+      this.gl.bufferData(this.type, data, this.gl.STATIC_DRAW);
+    });
   }
 
-  bind() {
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
+  bind(block) {
+    this.gl.bindBuffer(this.type, this.buffer);
+
+    if (block) {
+      block();
+      this.unbind();
+    }
   };
 
   unbind() {
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
+    this.gl.bindBuffer(this.type, null);
   };
 
   tearDown() {
