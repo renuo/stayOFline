@@ -7,8 +7,12 @@ class Program {
     this.setupProgram();
   }
 
-  bind() {
+  bind(block) {
     this.gl.useProgram(this.program);
+    if (block) {
+      block();
+      this.unbind();
+    }
   };
 
   unbind() {
