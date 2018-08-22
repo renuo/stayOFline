@@ -1,40 +1,41 @@
 function startMusic() {
-  (function myLoop(i, f, l) {
+  var sound = [[0, 2], [], [2, 2], [0, 1], [], [0, 1], [2, 2], [], [], [2, 1], [0, 2], [], [2, 2], [], [0, 2], [2, 1], [2, 2], [8, 2], [2, 1], [2, 1], [8, 2]];
+  (function myLoop(i) {
     setTimeout(function () {
-      playNote(600 - f * 10, 40);
-      if (l === 1) {
-        f++;
-        if (f > 20) {
-          l = 0;
-        }
-      } else {
-        f--;
-        if (f < 0) {
-          l = 1;
-        }
+      if (sound[i][0] != null) {
+        playTriangle(500 - sound[i][0] * 10, sound[i][1] * 100);
       }
-      if (f > 20) {
-        l = 0
+      i++;
+      if (i >= sound.length) {
+        i = 0;
       }
-      console.log(f + "  " + l);
-      myLoop(i, f, l);
-    }, 30)
-  })(1, 1, 1);
+      myLoop(i);
+    }, 200)
+  })(0);
 }
 
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-function playNote(frequency, duration, callback) {
+
+function playTriangle(frequency, duration) {
+  playTone(frequency, duration, 'triangle')
+}
+
+function playSquare(frequency, duration) {
+  playTone(frequency, duration, 'square')
+}
+
+function playTone(frequency, duration, type) {
   duration = duration / 1000;
 
   // create Oscillator node
   var oscillator = audioCtx.createOscillator();
 
-  oscillator.type = 'square';
+  oscillator.type = type;
   oscillator.frequency.value = frequency; // value in hertz
   oscillator.connect(audioCtx.destination);
 
-  oscillator.onended = callback;
+  // oscillator.onended = callback;
   oscillator.start(0);
   oscillator.stop(audioCtx.currentTime + duration);
 }
