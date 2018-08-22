@@ -1,6 +1,6 @@
 #!/bin/sh
 
-zip -qr palujo.zip index.html main.js styles.css ./engine/
+zip -qr palujo.zip index.html main.js styles.css ./engine/ ./theme/
 
 ZIP_SIZE=$(wc -c < palujo.zip)
 rm palujo.zip
