@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  let game, canvas, renderer, startBtn;
+  let game, canvas, renderer, startBtn, startMenu;
 
   window.onload = function () {
     document.ontouchmove = function (event) {
@@ -9,10 +9,12 @@
     };
 
     canvas = document.getElementById('the-game');
+    startMenu = document.getElementById('start-menu');
     startBtn = document.getElementById('start-btn');
     startBtn.onclick = function () {
       startMusic();
       canvas.classList.toggle('game-stopped');
+      startMenu.classList.toggle('game-stopped');
       startGame(canvas);
     };
   };
