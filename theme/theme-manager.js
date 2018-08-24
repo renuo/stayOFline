@@ -27,15 +27,10 @@ function playSquare(frequency, duration) {
 
 function playTone(frequency, duration, type) {
   duration = duration / 1000;
-
-  // create Oscillator node
   var oscillator = audioCtx.createOscillator();
-
   oscillator.type = type;
-  oscillator.frequency.value = frequency; // value in hertz
+  oscillator.frequency.value = frequency;
   oscillator.connect(audioCtx.destination);
-
-  // oscillator.onended = callback;
   oscillator.start(0);
   oscillator.stop(audioCtx.currentTime + duration);
 }
