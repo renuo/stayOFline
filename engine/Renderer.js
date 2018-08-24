@@ -29,11 +29,11 @@ class Renderer {
     this.gl.depthFunc(this.gl.LESS);
   }
 
-  render(mesh, camera) {
-    mesh.program.bind(() => {
-      mesh.bind(() => {
-        mesh.updateUniforms(this, camera);
-        this.gl.drawElements(this.gl.TRIANGLES, mesh.indicesBuffer.itemCount, this.gl.UNSIGNED_BYTE, 0);
+  render(model, program, camera) {
+    program.bind(() => {
+      model.geometry.bind(() => {
+        program.updateUniforms(this, camera, model);
+        this.gl.drawElements(this.gl.TRIANGLES, model.geometry.indicesBuffer.itemCount, this.gl.UNSIGNED_BYTE, 0);
       });
     });
   };
