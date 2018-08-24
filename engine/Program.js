@@ -7,6 +7,10 @@ class Program {
     this.setupProgram();
   }
 
+  getUniform(name) {
+    return this.gl.getUniformLocation(this.program, name);
+  }
+
   bind(block) {
     this.gl.useProgram(this.program);
     if (block) {

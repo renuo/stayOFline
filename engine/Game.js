@@ -7,9 +7,20 @@ class Game {
   }
 
   setupWorld() {
-    this.program = new Program(this.renderer.gl, 'vertex-shader', 'fragment-shader');
-    this.camera = new Camera();
-    this.mesh = new Cube(this.renderer.gl, this.program);
+    this.program = new BlockProgram(this.renderer.gl, 'vertex-shader', 'fragment-shader');
+    this.world = new World();
+    this.world.light = new Light([0.0, 1.0, -1.0]);
+
+    this.setupModels();
+  }
+
+  setupModels() {
+    const blockGeometry = new CubeGeometry(this.renderer.gl, this.program);
+    for (let i = 0; i < 100; i++) {
+      const factor = 10;
+      const factor2 = factor / 2;
+      this.world.models.push(new Block(blockGeometry, 1, 1, 1, [(Math.random() * factor) - factor2, (Math.random() * factor) - factor2, (Math.random() * factor) - factor2]));
+    }
   }
 
   loop() {
@@ -18,20 +29,23 @@ class Game {
     this.lastFrame = currentTime;
 
     this.renderer.prepareRendering();
-    this.renderer.render(this.mesh, this.camera);
+    this.world.models.forEach(model => {
+      this.renderer.render(model, this.program, this.world.camera, this.world.light);
+    });
   };
 
   update(timePassed, timePassedSinceUpdate) {
     // game state change happens here
-    const transformation = GLMath.matrix4Translate(GLMath.matrix4Identity(), [0, 0, -3]);
     const progress = timePassed * 8 * Math.PI * (1/60000); // = 4rpm
-    this.mesh.transformationMatrix = GLMath.matrix4Rotate(transformation, progress, [0, 1, 0]);
+    this.world.models.forEach(model => {
+      model.rotation = [0, progress, 0];
+    });
 
-    this.camera.moveZ(timePassedSinceUpdate / 5000);
+    this.world.camera.moveZ(timePassedSinceUpdate / 5000);
   }
 
   tearDown() {
     this.program.tearDown();
-    this.mesh.tearDown();
+    //this.model.geometry.tearDown();
   }
 }
