@@ -24,12 +24,12 @@ class BlockProgram extends Program {
     return GLMath.matrix4ConvertToMatrix3(normalMatrix);
   }
 
-  updateUniforms(renderer, camera, model) {
+  updateUniforms(renderer, model, camera, light) {
     this.gl.uniformMatrix4fv(this.uniformLocations.projectionMatrix, false, renderer.projectionMatrix);
     this.gl.uniformMatrix4fv(this.uniformLocations.modelMatrix, false, model.transformationMatrix);
     this.gl.uniformMatrix4fv(this.uniformLocations.viewMatrix, false, camera.transformationMatrix);
-    this.gl.uniform3f(this.uniformLocations.lightPosition, 0.0, 0.0, 0.0);
-    this.gl.uniform3f(this.uniformLocations.lightColor, 1.0, 1.0, 1.0);
+    this.gl.uniform3fv(this.uniformLocations.lightPosition, new Float32Array(light.position));
+    this.gl.uniform3fv(this.uniformLocations.lightColor, new Float32Array(light.color));
     this.gl.uniformMatrix3fv(this.uniformLocations.normalMatrix, false, this.createNormalMatrix(model.transformationMatrix, camera.transformationMatrix))
   }
 }
