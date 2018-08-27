@@ -12,10 +12,10 @@
     startMenu = document.getElementById('start-menu');
     startBtn = document.getElementById('start-btn');
     startBtn.onclick = function () {
-      startMusic();
       canvas.classList.toggle('game-stopped');
       startMenu.classList.toggle('game-stopped');
       startGame(canvas);
+      startMusic();
     };
   };
 
