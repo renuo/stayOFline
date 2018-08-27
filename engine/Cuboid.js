@@ -1,3 +1,4 @@
+// This is "Meshable(vertices, vertexIndices)"
 class Cuboid {
   constructor(width, height, depth, options = {
     position: [0, 0, 0], rotation: [0, 0, 0]

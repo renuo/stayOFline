@@ -11,6 +11,9 @@ class Game {
   setupWorld() {
     this.camera = new Camera();
     this.mesh = this.glifyMesh(new Cuboid(2, 2, 2));
+
+    this.level = new Level(20, 100);
+    this.level_meshes = this.level.meshables.map(m => this.glifyMesh(m));
   }
 
   loop() {
@@ -20,6 +23,7 @@ class Game {
 
     this.renderer.prepareRendering();
     this.renderer.render(this.mesh, this.camera);
+    this.level_meshes.forEach(m => this.renderer.render(m, this.camera))
   };
 
   update(timePassed, timePassedSinceUpdate) {
@@ -34,5 +38,6 @@ class Game {
   tearDown() {
     this.program.tearDown();
     this.mesh.tearDown();
+    this.level_meshes.forEach(m => m.tearDown());
   }
 }
