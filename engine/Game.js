@@ -5,6 +5,7 @@ class Game {
     this.setupWorld();
     this.startTime = (new Date()).getTime();
     this.lastFrame = this.startTime;
+    this.setupControls();
   }
 
   setupWorld() {
@@ -21,7 +22,9 @@ class Game {
     for (let z = 0; z < 50; z++) {
       level.nextLine().forEach(block => this.world.models.push(block));
     }
+  }
 
+  setupControls() {
     window.addEventListener('keydown', (event) => {
       const v = 0.1;
       const mapping = {
