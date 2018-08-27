@@ -28,11 +28,24 @@ class LevelGenerator {
 
   _createCuboid(x, z) {
     const y = this._height(x, z);
+    if (!y) return null;
     return new Block(this.blockGeometry, 0.999, y, 0.999, [x, y/2, -z]);
   }
 
   _height(x, z) {
-    return Math.abs(Math.sin(x) * Math.cos(z)) + this.minHeight; // TODO: vary functions
+    return this._ripple(x, z) + this.minHeight; // TODO: vary functions
+  }
+
+  _sincos(x, z) {
+    return Math.sin(5*x) * Math.cos(5*z) / 5;
+  }
+
+  _ripple(x, z) {
+    return Math.sin(10*(Math.sqrt((z*z)+(x*x))))/10;
+  }
+
+  _pyramid(x, z) {
+    return 1-Math.abs(x+z)-Math.abs(z-x);
   }
 
   _cutRoadGrid() {

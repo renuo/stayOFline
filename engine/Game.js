@@ -20,7 +20,7 @@ class Game {
     const blockGeometry = new CubeGeometry(this.renderer.gl, this.program);
     const level = new LevelGenerator(20, blockGeometry);
     for (let z = 0; z < 50; z++) {
-      level.nextLine().forEach(block => this.world.models.push(block));
+      level.nextLine().filter(b => b).forEach(block => this.world.models.push(block));
     }
   }
 
