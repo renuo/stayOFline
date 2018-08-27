@@ -5,6 +5,12 @@ body {
     overflow: hidden;
 }
 
+/* TODO: throw away */
+#debug {
+    position: fixed;
+    color: green;
+}
+
 #the-game {
     width: 100%;
     height: 100%;

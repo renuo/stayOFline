@@ -1,5 +1,6 @@
 class Game {
   constructor(renderer) {
+    debug('Use wasdrf to move');
     this.renderer = renderer;
     this.setupWorld();
     this.startTime = (new Date()).getTime();
@@ -9,18 +10,33 @@ class Game {
   setupWorld() {
     this.program = new BlockProgram(this.renderer.gl, 'vertex-shader', 'fragment-shader');
     this.world = new World();
-    this.world.light = new Light([0.0, 1.0, -1.0]);
+    this.world.light = new Light([-7.0, 1.0, 2]);
 
     this.setupModels();
   }
 
   setupModels() {
     const blockGeometry = new CubeGeometry(this.renderer.gl, this.program);
-    for (let i = 0; i < 100; i++) {
-      const factor = 10;
-      const factor2 = factor / 2;
-      this.world.models.push(new Block(blockGeometry, 1, 1, 1, [(Math.random() * factor) - factor2, (Math.random() * factor) - factor2, (Math.random() * factor) - factor2]));
+    const level = new LevelGenerator(20, blockGeometry);
+    for (let z = 0; z < 50; z++) {
+      level.nextLine().forEach(block => this.world.models.push(block));
     }
+
+    window.addEventListener('keydown', (event) => {
+      const v = 0.1;
+      const mapping = {
+        w: [0, 0, -v],
+        s: [0, 0, v],
+        a: [-v, 0, 0],
+        d: [v, 0, 0],
+        r: [0, v, 0],
+        f: [0, -v, 0]
+      };
+
+      if (mapping[event.key] === undefined) return;
+      this.world.camera.translate(mapping[event.key]);
+      debug(this.world.camera.transformationMatrix);
+    });
   }
 
   loop() {
@@ -37,11 +53,11 @@ class Game {
   update(timePassed, timePassedSinceUpdate) {
     // game state change happens here
     const progress = timePassed * 8 * Math.PI * (1/60000); // = 4rpm
-    this.world.models.forEach(model => {
-      model.rotation = [0, progress, 0];
-    });
+    // this.world.models.forEach(model => {
+    //   model.rotation = [0, progress, 0];
+    // });
 
-    this.world.camera.moveZ(timePassedSinceUpdate / 5000);
+    //this.world.camera.moveZ(timePassedSinceUpdate / 5000);
   }
 
   tearDown() {
