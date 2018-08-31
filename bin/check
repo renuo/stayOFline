@@ -1,6 +1,9 @@
 #!/bin/sh
 
-zip -qr palujo.zip index.html main.js styles.css ./engine/ ./theme/
+bin/build
+
+cd build
+zip -qr palujo.zip index.html styles.css lib.min.js
 
 ZIP_SIZE=$(wc -c < palujo.zip)
 rm palujo.zip
@@ -13,3 +16,4 @@ then
   echo "[WARNING] File is larger than 13'312 bytes!"
 fi
 
+cd ..
