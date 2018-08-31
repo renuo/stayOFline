@@ -14,6 +14,7 @@ class Game {
     this.world.light = new Light([-7.0, 1.0, 2]);
 
     this.setupModels();
+    this.setupPlayer();
   }
 
   setupModels() {
@@ -22,6 +23,10 @@ class Game {
     for (let z = 0; z < 50; z++) {
       level.nextLine().filter(b => b).forEach(block => this.world.models.push(block));
     }
+  }
+
+  setupPlayer() {
+    this.player = this.world.camera;
   }
 
   loop() {
@@ -35,14 +40,19 @@ class Game {
     });
   };
 
-  update(timePassed, timePassedSinceUpdate) {
+  update(timePassedMs, timePassedSinceUpdate) {
     // game state change happens here
-    const progress = timePassed * 8 * Math.PI * (1 / 60000); // = 4rpm
+    const progress = timePassedMs * 8 * Math.PI * (1 / 60000); // = 4rpm
     // this.world.models.forEach(model => {
     //   model.rotation = [0, progress, 0];
     // });
 
-    //this.world.camera.moveZ(timePassedSinceUpdate / 5000);
+    if (this.world.inModel(this.player.position)) {
+      // set player to block surface height
+    } else {
+      // fall
+     // this.player.moveY(-9.81 * (timePassedMs / 1000))
+    }
   }
 
   tearDown() {
