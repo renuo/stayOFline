@@ -1,11 +1,11 @@
 class Game {
   constructor(renderer) {
-    debug('Use wasdrf to move');
     this.renderer = renderer;
     this.setupWorld();
     this.startTime = (new Date()).getTime();
     this.lastFrame = this.startTime;
-    this.setupControls();
+    this.keylistener = new KeyListener();
+    this.keylistener.setupControls(this.world);
   }
 
   setupWorld() {
@@ -24,24 +24,6 @@ class Game {
     }
   }
 
-  setupControls() {
-    window.addEventListener('keydown', (event) => {
-      const v = 0.1;
-      const mapping = {
-        w: [0, 0, -v],
-        s: [0, 0, v],
-        a: [-v, 0, 0],
-        d: [v, 0, 0],
-        r: [0, v, 0],
-        f: [0, -v, 0]
-      };
-
-      if (mapping[event.key] === undefined) return;
-      this.world.camera.translate(mapping[event.key]);
-      debug(this.world.camera.transformationMatrix);
-    });
-  }
-
   loop() {
     const currentTime = new Date().getTime();
     this.update(currentTime - this.startTime, currentTime - this.lastFrame);
@@ -55,7 +37,7 @@ class Game {
 
   update(timePassed, timePassedSinceUpdate) {
     // game state change happens here
-    const progress = timePassed * 8 * Math.PI * (1/60000); // = 4rpm
+    const progress = timePassed * 8 * Math.PI * (1 / 60000); // = 4rpm
     // this.world.models.forEach(model => {
     //   model.rotation = [0, progress, 0];
     // });
