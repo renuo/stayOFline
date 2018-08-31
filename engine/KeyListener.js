@@ -33,6 +33,10 @@ class KeyListener {
       world.camera.rotateX(mapping2[key]);
     }
 
+    if (key === ' ' && world.player.v[1] === 0) {
+      world.player.v[1] += 1;
+    }
+
     debug(world.camera.transformationMatrix);
   }
 

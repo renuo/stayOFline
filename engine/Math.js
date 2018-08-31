@@ -24,6 +24,7 @@
       ]);
     },
 
+
     orthographicMatrix: function(left, right, bottom, top, near, far) {
 
       // Each of the parameters represents the plane of the bounding box

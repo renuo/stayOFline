@@ -12,7 +12,7 @@ class Game {
     this.program = new BlockProgram(this.renderer.gl, 'vertex-shader', 'fragment-shader');
     this.world = new World();
     this.world.light = new Light([-7.0, 1.0, 2]);
-    this.world.camera.position = [5.0, 0.0, 5.0];
+    this.world.camera.position = [10.0, 2.0, -1.0];
 
     this.setupModels();
     this.setupPlayer();
@@ -27,7 +27,8 @@ class Game {
   }
 
   setupPlayer() {
-    this.player = this.world.camera;
+    this.player = this.world.player;
+    this.player.v = [0, 0, 0];
   }
 
   loop() {
@@ -39,18 +40,32 @@ class Game {
     this.renderer.render(this.world.models, this.program, this.world.camera, this.world.light);
   };
 
-  update(timePassedMs, timePassedSinceUpdate) {
-    // game state change happens here
-    const progress = timePassedMs * 8 * Math.PI * (1 / 60000); // = 4rpm
-    // this.world.models.forEach(model => {
-    //   model.rotation = [0, progress, 0];
-    // });
+  update(timePassedMs, timePassedSinceUpdateMs) {
+    const vectorAdd = (a, b) => a.map((memo, i) => memo + b[i]); // TODO: where to put this?
 
-    if (this.world.inModel(this.player.position)) {
-      // set player to block surface height
+    const g = -9.81;
+    const dt = (timePassedSinceUpdateMs / 1000);
+    const dv = g * dt;
+
+    this.player.v[1] += dv;
+    const next_position = vectorAdd(this.player.position, this.player.v);
+
+    //console.log(this.world.aboveGround(this.player.position)); // Meters over the next block
+    if (this.world.aboveGround(this.player.position)) {
+      if (this.world.aboveGround(next_position)) {
+        this.player.position = next_position; // falling
+      } else {
+        this.player.v[1] = 0; // regular colliding
+      }
     } else {
-      // fall
-     // this.player.moveY(-9.81 * (timePassedMs / 1000))
+      if (this.world.inAnyModel(this.player.position)) {
+        console.log('You\'re in a wall… WAT?');
+      } else if (this.world.inAnyModel(next_position)) {
+        console.log('You\'re walking into a wall');
+      } else {
+        this.player.position = next_position;
+        console.log('You\'re falling into the nether!')
+      }
     }
   }
 
