@@ -5,5 +5,6 @@ function startMusic() {
   var wave = player.createWave();
   var audio = document.createElement("audio");
   audio.src = URL.createObjectURL(new Blob([wave], {type: "audio/wav"}));
+  audio.loop = true;
   audio.play();
 }
