@@ -4,9 +4,13 @@
   let game, canvas, renderer, startBtn, startMenu;
 
   window.onload = function () {
-    document.ontouchmove = function (event) {
-      event.preventDefault();
-    };
+    if ("ontouchstart" in document.documentElement) {
+      debug("your device is a touch screen device.");
+      localStorage['isTouch'] = 1;
+    } else {
+      debug("your device is NOT a touch device");
+      localStorage['isTouch'] = 0;
+    }
 
     canvas = document.getElementById('the-game');
     startMenu = document.getElementById('start-menu');
