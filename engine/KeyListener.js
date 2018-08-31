@@ -22,8 +22,17 @@ class KeyListener {
       f: [0, -v, 0]
     };
 
-    if (mapping[key] === undefined) return;
-    world.camera.translate(mapping[key]);
+    const mapping2 = {
+      o: v,
+      l: -v
+    };
+
+    if (mapping[key] !== undefined) {
+      world.camera.translate(mapping[key]);
+    } else if (mapping2[key] !== undefined) {
+      world.camera.rotateX(mapping2[key]);
+    }
+
     debug(world.camera.transformationMatrix);
   }
 

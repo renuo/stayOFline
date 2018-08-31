@@ -12,6 +12,7 @@ class Game {
     this.program = new BlockProgram(this.renderer.gl, 'vertex-shader', 'fragment-shader');
     this.world = new World();
     this.world.light = new Light([-7.0, 1.0, 2]);
+    this.world.camera.position = [5.0, 0.0, 5.0];
 
     this.setupModels();
     this.setupPlayer();
@@ -35,9 +36,7 @@ class Game {
     this.lastFrame = currentTime;
 
     this.renderer.prepareRendering();
-    this.world.models.forEach(model => {
-      this.renderer.render(model, this.program, this.world.camera, this.world.light);
-    });
+    this.renderer.render(this.world.models, this.program, this.world.camera, this.world.light);
   };
 
   update(timePassedMs, timePassedSinceUpdate) {

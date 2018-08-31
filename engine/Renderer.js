@@ -18,7 +18,8 @@ class Renderer {
   resizeViewport() {
     this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
     this.gl.colorMask(true, true, true, true);
-    this.projectionMatrix = GLMath.projectionMatrix(30, 0.1, 1000, this.canvas.height / this.canvas.width);
+    this.projectionMatrix = GLMath.projectionMatrix(30, 0.1, 1000, this.canvas.width / this.canvas.height);
+    // this.projectionMatrix = GLMath.orthographicMatrix(-5.0, 5.0, -5.0, 5.0, -5.0, 5.0);
   };
 
   prepareRendering() {
@@ -29,11 +30,13 @@ class Renderer {
     this.gl.depthFunc(this.gl.LESS);
   }
 
-  render(model, program, camera, light) {
+  render(models, program, camera, light) {
     program.bind(() => {
-      model.geometry.bind(() => {
-        program.updateUniforms(this, camera, model, light);
-        this.gl.drawElements(this.gl.TRIANGLES, model.geometry.indicesBuffer.itemCount, this.gl.UNSIGNED_BYTE, 0);
+      models[0].geometry.bind(() => {
+        models.forEach(model => {
+          program.updateUniforms(this, camera, model, light);
+          this.gl.drawElements(this.gl.TRIANGLES, model.geometry.indicesBuffer.itemCount, this.gl.UNSIGNED_BYTE, 0);
+        });
       });
     });
   };

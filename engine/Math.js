@@ -10,14 +10,38 @@
         return rad * 180 / Math.PI;
     },
 
-    projectionMatrix: function(viewAngle, zNear, zFar, aspectRatio) {
-      viewAngle = GLMath.degToRad(viewAngle);
+    projectionMatrix: function(viewAngle, near, far, aspectRatio) {
+      let fieldOfViewInRadians = GLMath.degToRad(viewAngle);
+
+      let f = 1.0 / Math.tan(fieldOfViewInRadians / 2);
+      let rangeInv = 1 / (near - far);
+
       return new Float32Array([
-        aspectRatio/Math.tan(viewAngle), 0, 0, 0,
-        0, 1/Math.tan(viewAngle), 0, 0,
-        0, 0, (zNear+zFar)/(zNear-zFar), -1,
-        0, 0, 2*zNear*zFar/(zNear-zFar), 0
+        f / aspectRatio, 0,                          0,   0,
+        0,               f,                          0,   0,
+        0,               0,    (near + far) * rangeInv,  -1,
+        0,               0,  near * far * rangeInv * 2,   0
       ]);
+    },
+
+    orthographicMatrix: function(left, right, bottom, top, near, far) {
+
+      // Each of the parameters represents the plane of the bounding box
+
+      var lr = 1 / (left - right);
+      var bt = 1 / (bottom - top);
+      var nf = 1 / (near - far);
+
+      var row4col1 = (left + right) * lr;
+      var row4col2 = (top + bottom) * bt;
+      var row4col3 = (far + near) * nf;
+
+      return [
+        -2 * lr,        0,        0, 0,
+        0,  -2 * bt,        0, 0,
+        0,        0,   2 * nf, 0,
+        row4col1, row4col2, row4col3, 1
+      ];
     },
 
     matrix4: function() {
@@ -251,7 +275,7 @@
       ]);
     },
 
-    matrix4ScaleWithVector: function(mat, vec, dest) {
+    matrix4ScaleWithVector: function(mat, vec) {
       var x = vec[0], y = vec[1], z = vec[2];
 
       return new Float32Array([

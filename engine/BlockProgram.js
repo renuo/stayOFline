@@ -10,10 +10,10 @@ class BlockProgram extends Program {
     return {
       projectionMatrix: this.getUniform('projectionMatrix'),
       modelMatrix: this.getUniform('modelMatrix'),
-      viewMatrix: this.getUniform("viewMatrix"),
+      viewMatrix: this.getUniform('viewMatrix'),
+      normalMatrix: this.getUniform('normalMatrix'),
       lightPosition: this.getUniform('lightPosition'),
-      lightColor: this.getUniform('lightColor'),
-      normalMatrix: this.getUniform('normalMatrix')
+      lightColor: this.getUniform('lightColor')
     };
   }
 
@@ -30,6 +30,6 @@ class BlockProgram extends Program {
     this.gl.uniformMatrix4fv(this.uniformLocations.viewMatrix, false, camera.transformationMatrix);
     this.gl.uniform3fv(this.uniformLocations.lightPosition, new Float32Array(light.position));
     this.gl.uniform3fv(this.uniformLocations.lightColor, new Float32Array(light.color));
-    this.gl.uniformMatrix3fv(this.uniformLocations.normalMatrix, false, this.createNormalMatrix(model.transformationMatrix, camera.transformationMatrix))
+    this.gl.uniformMatrix3fv(this.uniformLocations.normalMatrix, false, this.createNormalMatrix(model.transformationMatrix, camera.transformationMatrix));
   }
 }

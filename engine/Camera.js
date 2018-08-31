@@ -27,7 +27,7 @@ class Camera {
   get transformationMatrix() {
     let matrix = GLMath.matrix4Identity();
     matrix = GLMath.matrix4Rotate(matrix, this.rotation[0], [1, 0, 0]);
-    matrix = GLMath.matrix4Translate(matrix, [-this.position[0], -this.position[1], -this.position[2]]);
-    return matrix;
+    matrix = GLMath.matrix4Translate(matrix, [this.position[0], this.position[1], this.position[2]]);
+    return GLMath.matrix4Inverse(matrix);
   }
 }
