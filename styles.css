@@ -1,5 +1,4 @@
 body {
-    background-color: #bad;
     font-family: monospace;
     user-select: none;
     overflow: hidden;
@@ -17,6 +16,22 @@ body {
     position: absolute;
     top: 0;
     left: 0;
+}
+
+#start-menu {
+    background-color: #3F54B1;
+}
+
+#death-menu {
+    background-color: #B0040B;
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 h1 {
