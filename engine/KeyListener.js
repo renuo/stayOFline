@@ -43,7 +43,7 @@ class KeyListener {
 
   swipedetect(element, world) {
     let touchsurface = element, swipedir, startX, startY, distX, distY, threshold = 150, restraint = 100,
-      allowedTime = 300, elapsedTime, startTime;
+      allowedTime = 300, elapsedTime, startTime, tapThreshold = 10;
 
     touchsurface.addEventListener('touchstart', function (e) {
       var touchobj = e.changedTouches[0];
@@ -66,9 +66,8 @@ class KeyListener {
       if (elapsedTime <= allowedTime) {
         if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint) {
           swipedir = (distX < 0) ? 'a' : 'd'
-        }
-        else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint) {
-          swipedir = (distY < 0) ? 'w' : 's'
+        } else if (Math.abs(distX) <= tapThreshold && Math.abs(distY) <= tapThreshold) {
+          swipedir = ' ';
         }
       }
       KeyListener.move(swipedir, world);
