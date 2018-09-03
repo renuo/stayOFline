@@ -51,20 +51,27 @@ class Game {
     const next_position = vectorAdd(this.player.position, this.player.v);
 
     //console.log(this.world.aboveGround(this.player.position)); // Meters over the next block
-    if (this.world.aboveGround(this.player.position)) {
-      if (this.world.aboveGround(next_position)) {
+    const mAboveGround = this.world.aboveGround(this.player.position);
+    const minAboveGroundConstraint = 0.1;
+    console.log(`${mAboveGround}m above ground`);
+
+    if (mAboveGround > minAboveGroundConstraint) {
+      if (this.world.aboveGround(next_position) > minAboveGroundConstraint) {
         this.player.position = next_position; // falling
       } else {
-        this.player.v[1] = 0; // regular colliding
+        this.player.v[1] = 0; // regular collision
+        this.player.moveY(minAboveGroundConstraint - Math.floor(mAboveGround*1000)/1000);
       }
     } else {
       if (this.world.inAnyModel(this.player.position)) {
         console.log('You\'re in a wall… WAT?');
+        // TODO: handle error
       } else if (this.world.inAnyModel(next_position)) {
         console.log('You\'re walking into a wall');
+        // TODO: handle collision
       } else {
-        this.player.position = next_position;
         console.log('You\'re falling into the nether!')
+        this.player.position = next_position;
       }
     }
   }

@@ -28,14 +28,14 @@ class World {
 
   aboveGround(position) {
     const inRange = (x, min, max) => ((x-min)*(x-max) <= 0);
-    const deltaOffsetY = 0.05;
     const blocksDirectlyBelow = this.models
       .filter(m => inRange(position[0], m.axisMin(0), m.axisMax(0)))
       .filter(m => inRange(position[2], m.axisMin(2), m.axisMax(2)))
-      .filter(m => position[1] > m.axisMax(1) + deltaOffsetY)
+      .filter(m => position[1] > m.axisMax(1))
       .sort((a, b) => a.axisMax(1) - b.axisMax(1));
     if (blocksDirectlyBelow.length > 0) {
-      return position[1] - blocksDirectlyBelow[0].position[1]; // meters above ground
+      const topBlock = blocksDirectlyBelow[0];
+      return position[1] - (topBlock.position[1] + topBlock.scale[1] / 2); // meters above ground
     } else {
       return NaN;
     }
