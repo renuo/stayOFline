@@ -29,12 +29,15 @@ class LevelGenerator {
   _createCuboid(x, z) {
     const y = this._height(x, z);
     if (!y) return null;
-    // TODO: should be 1, y, 1, [x, y/2, -z] as soon, as the perspective bug is fixed
-    return new Block(this.blockGeometry, 0.9, 1, 1, [x, 0, -z]);
+    return new Block(this.blockGeometry, 1, y, 1, [x, y/2, -z]);
   }
 
   _height(x, z) {
-    return this._ripple(x, z) + this.minHeight; // TODO: vary functions
+    return this._flat(x, z) + this.minHeight; // TODO: vary functions
+  }
+
+  _flat(x, z) {
+    return 0;
   }
 
   _sincos(x, z) {
