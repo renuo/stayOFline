@@ -27,7 +27,7 @@ class Game {
   }
 
   setupPlayer() {
-    this.player = this.world.player;
+    this.player = this.world.camera;
     this.player.v = [0, 0, 0];
   }
 
