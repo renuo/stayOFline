@@ -11,7 +11,7 @@ class Game {
   setupWorld() {
     this.program = new BlockProgram(this.renderer.gl, 'vertex-shader', 'fragment-shader');
     this.world = new World();
-    this.world.light = new Light([-10.0, 5.0, 25]);
+    this.world.light = new Light([10.0, 20.0, 25]);
     this.world.camera.position = [10.0, 10.0, 0.0];
 
     this.setupModels();
@@ -30,7 +30,9 @@ class Game {
   setupGoal() {
     const blockGeometry = new CubeGeometry(this.renderer.gl, this.program);
     const flagBlocks = [
-      new Block(blockGeometry, 1, 1, 1, [10, 2, -49])
+      new Block(blockGeometry, 1, 4, 1, [10, 3.5, -49]),
+      new Block(blockGeometry, 2, 1, 2, [10, 4, -49]),
+      new Block(blockGeometry, 1.5, 1.5, 1.5, [10, 4, -49])
     ];
     flagBlocks.forEach(block => this.world.models.push(block));
   }
