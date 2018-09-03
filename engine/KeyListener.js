@@ -1,39 +1,34 @@
 class KeyListener {
   setupControls(world) {
     if (localStorage.isTouch == 1) {
-      debug('Use swipe to move');
+      debug('Swipe to move, tap to jump');
       this.swipedetect(window, world);
     } else {
-      debug('Use wasdrf to move');
+      debug('AD to move, Space to jump');
       window.addEventListener('keydown', (event) => {
-        KeyListener.move(event.key, world);
+        const mapping = {
+          a: 'left',
+          d: 'right',
+          ' ': 'jump'
+        };
+
+        KeyListener.move(mapping[event.key], world);
       });
     }
   }
 
-  static move(key, world) {
-    const v = 0.1;
+  static move(dir, world) {
+    const v = 1;
     const mapping = {
-      w: [0, 0, -v],
-      s: [0, 0, v],
-      a: [-v, 0, 0],
-      d: [v, 0, 0],
-      r: [0, v, 0],
-      f: [0, -v, 0]
+      left: [-v, 0, 0],
+      right: [v, 0, 0],
     };
 
-    const mapping2 = {
-      o: v,
-      l: -v
-    };
-
-    if (mapping[key] !== undefined) {
-      world.camera.translate(mapping[key]);
-    } else if (mapping2[key] !== undefined) {
-      world.camera.rotateX(mapping2[key]);
+    if (mapping[dir] !== undefined) {
+      world.camera.translate(mapping[dir]);
     }
 
-    if (key === ' ' && world.player.v[1] === 0) {
+    if (dir === 'jump' && world.player.v[1] === 0) {
       world.player.v[1] += 1.45; // Source: https://www.whatsmyvertical.com/the-physics-of-the-vertical-jump/
     }
 
@@ -65,9 +60,9 @@ class KeyListener {
       elapsedTime = new Date().getTime() - startTime;
       if (elapsedTime <= allowedTime) {
         if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint) {
-          swipedir = (distX < 0) ? 'a' : 'd'
+          swipedir = (distX < 0) ? 'left' : 'right'
         } else if (Math.abs(distX) <= tapThreshold && Math.abs(distY) <= tapThreshold) {
-          swipedir = ' ';
+          swipedir = 'jump';
         }
       }
       KeyListener.move(swipedir, world);
