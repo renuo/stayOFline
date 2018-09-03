@@ -11,19 +11,28 @@ class Game {
   setupWorld() {
     this.program = new BlockProgram(this.renderer.gl, 'vertex-shader', 'fragment-shader');
     this.world = new World();
-    this.world.light = new Light([-7.0, 1.0, 2]);
-    this.world.camera.position = [10.0, 2.0, -1.0];
+    this.world.light = new Light([-10.0, 5.0, 25]);
+    this.world.camera.position = [10.0, 10.0, 0.0];
 
     this.setupModels();
     this.setupPlayer();
+    this.setupGoal();
   }
 
   setupModels() {
     const blockGeometry = new CubeGeometry(this.renderer.gl, this.program);
     const level = new LevelGenerator(20, blockGeometry);
     for (let z = 0; z < 50; z++) {
-      level.nextLine().filter(b => b).forEach(block => this.world.models.push(block));
+      level.produceGridLine().filter(b => b).forEach(block => this.world.models.push(block));
     }
+  }
+
+  setupGoal() {
+    const blockGeometry = new CubeGeometry(this.renderer.gl, this.program);
+    const flagBlocks = [
+      new Block(blockGeometry, 1, 1, 1, [10, 2, -49])
+    ];
+    flagBlocks.forEach(block => this.world.models.push(block));
   }
 
   setupPlayer() {
@@ -41,6 +50,7 @@ class Game {
   };
 
   update(timePassedMs, timePassedSinceUpdateMs) {
+    this.checkVictory();
     this.updatePlayerGravity(timePassedSinceUpdateMs);
   }
 
@@ -49,10 +59,14 @@ class Game {
     //this.model.geometry.tearDown();
   }
 
+  checkVictory() {
+
+  }
+
   updatePlayerGravity(timePassedSinceUpdateMs) {
     const vectorAdd = (a, b) => a.map((memo, i) => memo + b[i]); // TODO: where to put this?
 
-    const g = -9.81;
+    const g = -9.81 / 5;
     const dt = (timePassedSinceUpdateMs / 1000);
     const dv = g * dt;
 

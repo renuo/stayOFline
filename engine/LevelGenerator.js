@@ -15,7 +15,7 @@ class LevelGenerator {
     this.minHeight = 1;
   }
 
-  nextLine() {
+  produceGridLine() {
     const line = new Array(this.lineWidth);
 
     for (let x = 0; x < this.lineWidth; x++) {
@@ -29,7 +29,8 @@ class LevelGenerator {
   _createCuboid(x, z) {
     const y = this._height(x, z);
     if (!y) return null;
-    return new Block(this.blockGeometry, 1, 1, 1, [x, 0, -z]); // should be 1, y, 1, [x, y/2, -z]
+    // TODO: should be 1, y, 1, [x, y/2, -z] as soon, as the perspective bug is fixed
+    return new Block(this.blockGeometry, 0.9, 1, 1, [x, 0, -z]);
   }
 
   _height(x, z) {

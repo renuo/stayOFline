@@ -29,7 +29,7 @@ class KeyListener {
     }
 
     if (dir === 'jump' && world.player.v[1] === 0) {
-      world.player.v[1] += 1.45; // Source: https://www.whatsmyvertical.com/the-physics-of-the-vertical-jump/
+      world.player.v[1] += 0.45; // Source: https://www.whatsmyvertical.com/the-physics-of-the-vertical-jump/
     }
 
     debug(world.camera.transformationMatrix);
