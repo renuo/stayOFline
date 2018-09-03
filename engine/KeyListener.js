@@ -34,7 +34,7 @@ class KeyListener {
     }
 
     if (key === ' ' && world.player.v[1] === 0) {
-      world.player.v[1] += 1;
+      world.player.v[1] += 4.5; // Source: https://www.whatsmyvertical.com/the-physics-of-the-vertical-jump/
     }
 
     debug(world.camera.transformationMatrix);
