@@ -4,6 +4,17 @@ class World {
     this.light = null;
     this.models = [];
     this.player = this.camera;
+    this.moveForward();
+  }
+
+  moveForward() {
+    if (localStorage['running'] == 1) {
+      var self = this;
+      setTimeout(function () {
+        self.camera.translate([0, 0, -0.1]);
+        self.moveForward();
+      }, 10);
+    }
   }
 
   inAnyModel(position) {

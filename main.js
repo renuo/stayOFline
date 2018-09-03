@@ -30,6 +30,7 @@
   window.addEventListener('resize', resizeCanvas);
 
   function startGame(canvas) {
+    localStorage['running'] = 1;
     themeManager = new ThemeManager();
     themeManager.startMusic();
     renderer = new Renderer(canvas);
@@ -40,6 +41,7 @@
 
   // TODO call this to stop the game
   function stopGame() {
+    localStorage['running'] = 0;
     let deathMenu = document.getElementById('death-menu');
     deathMenu.style.removeProperty('display');
     canvas = document.getElementById('the-game');
