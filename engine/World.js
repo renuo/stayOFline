@@ -3,7 +3,6 @@ class World {
     this.camera = new Camera();
     this.light = null;
     this.models = [];
-    this.player = this.camera;
     this.moveForward();
   }
 

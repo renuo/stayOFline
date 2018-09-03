@@ -27,7 +27,7 @@ class Game {
   }
 
   setupPlayer() {
-    this.player = this.world.player;
+    this.player = this.world.camera;
     this.player.v = [0, 0, 0];
   }
 
@@ -41,6 +41,15 @@ class Game {
   };
 
   update(timePassedMs, timePassedSinceUpdateMs) {
+    this.updatePlayerGravity(timePassedSinceUpdateMs);
+  }
+
+  tearDown() {
+    this.program.tearDown();
+    //this.model.geometry.tearDown();
+  }
+
+  updatePlayerGravity(timePassedSinceUpdateMs) {
     const vectorAdd = (a, b) => a.map((memo, i) => memo + b[i]); // TODO: where to put this?
 
     const g = -9.81;
@@ -50,7 +59,6 @@ class Game {
     this.player.v[1] += dv;
     const next_position = vectorAdd(this.player.position, this.player.v);
 
-    //console.log(this.world.aboveGround(this.player.position)); // Meters over the next block
     const mAboveGround = this.world.aboveGround(this.player.position);
     const minAboveGroundConstraint = 0.1;
     //console.log(`${mAboveGround}m above ground`);
@@ -74,10 +82,5 @@ class Game {
         this.player.position = next_position;
       }
     }
-  }
-
-  tearDown() {
-    this.program.tearDown();
-    //this.model.geometry.tearDown();
   }
 }
