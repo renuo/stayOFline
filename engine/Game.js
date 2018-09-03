@@ -53,7 +53,7 @@ class Game {
     //console.log(this.world.aboveGround(this.player.position)); // Meters over the next block
     const mAboveGround = this.world.aboveGround(this.player.position);
     const minAboveGroundConstraint = 0.1;
-    console.log(`${mAboveGround}m above ground`);
+    //console.log(`${mAboveGround}m above ground`);
 
     if (mAboveGround > minAboveGroundConstraint) {
       if (this.world.aboveGround(next_position) > minAboveGroundConstraint) {
