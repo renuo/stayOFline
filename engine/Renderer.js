@@ -34,7 +34,7 @@ class Renderer {
     program.bind(() => {
       models[0].geometry.bind(() => {
         models.forEach(model => {
-          program.updateUniforms(this, camera, model, light);
+          program.updateUniforms(this, model, camera, light);
           this.gl.drawElements(this.gl.TRIANGLES, model.geometry.indicesBuffer.itemCount, this.gl.UNSIGNED_BYTE, 0);
         });
       });
