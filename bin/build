@@ -3,7 +3,7 @@
 set -e
 
 [ -d build ] || mkdir build
-rm build/*
+rm build/* 2>/dev/null || true
 
 cp index.html build/
 
