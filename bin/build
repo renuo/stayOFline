@@ -17,6 +17,6 @@ node_modules/.bin/uglifyjs $JS_FILES -c -m -o build/lib.min.js
 node_modules/.bin/uglifycss styles.css > build/styles.css
 
 REPLACEMENT='<script src="lib.min.js"></script>'
-sed -i '' -e "/$MARKER_START/ , /$MARKER_END/ c\\
+sed -i -e "/$MARKER_START/ , /$MARKER_END/ c\\
 $REPLACEMENT
 "  build/index.html
