@@ -26,16 +26,13 @@
 
 
     orthographicMatrix: function(left, right, bottom, top, near, far) {
+      const lr = 1 / (left - right);
+      const bt = 1 / (bottom - top);
+      const nf = 1 / (near - far);
 
-      // Each of the parameters represents the plane of the bounding box
-
-      var lr = 1 / (left - right);
-      var bt = 1 / (bottom - top);
-      var nf = 1 / (near - far);
-
-      var row4col1 = (left + right) * lr;
-      var row4col2 = (top + bottom) * bt;
-      var row4col3 = (far + near) * nf;
+      const row4col1 = (left + right) * lr;
+      const row4col2 = (top + bottom) * bt;
+      const row4col3 = (far + near) * nf;
 
       return [
         -2 * lr,        0,        0, 0,
@@ -71,16 +68,16 @@
     },
 
     matrix4ConvertToInversedMatrix3: function(mat) {
-      var a00 = mat[0], a01 = mat[1], a02 = mat[2],
+      const a00 = mat[0], a01 = mat[1], a02 = mat[2],
           a10 = mat[4], a11 = mat[5], a12 = mat[6],
           a20 = mat[8], a21 = mat[9], a22 = mat[10];
 
-      var b01 =  a22 * a11 - a12 * a21,
+      const b01 =  a22 * a11 - a12 * a21,
           b11 = -a22 * a10 + a12 * a20,
           b21 =  a21 * a10 - a11 * a20;
 
-      var d = a00 * b01 + a01 * b11 + a02 * b21, id;
-      var out = GLMath.matrix3();
+      let d = a00 * b01 + a01 * b11 + a02 * b21, id;
+      let out = GLMath.matrix3();
 
       if (!d)
         return null;
@@ -206,9 +203,7 @@
     },
 
     matrix4Inverse: function(mat) {
-      var out = GLMath.matrix4();
-
-      var a00 = mat[0], a01 = mat[1], a02 = mat[2], a03 = mat[3],
+      const a00 = mat[0], a01 = mat[1], a02 = mat[2], a03 = mat[3],
         a10 = mat[4], a11 = mat[5], a12 = mat[6], a13 = mat[7],
         a20 = mat[8], a21 = mat[9], a22 = mat[10], a23 = mat[11],
         a30 = mat[12], a31 = mat[13], a32 = mat[14], a33 = mat[15],
@@ -226,28 +221,28 @@
         b11 = a22 * a33 - a23 * a32,
         invDet = 1 / (b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06);
 
-      out[0] = (a11 * b11 - a12 * b10 + a13 * b09) * invDet;
-      out[1] = (-a01 * b11 + a02 * b10 - a03 * b09) * invDet;
-      out[2] = (a31 * b05 - a32 * b04 + a33 * b03) * invDet;
-      out[3] = (-a21 * b05 + a22 * b04 - a23 * b03) * invDet;
-      out[4] = (-a10 * b11 + a12 * b08 - a13 * b07) * invDet;
-      out[5] = (a00 * b11 - a02 * b08 + a03 * b07) * invDet;
-      out[6] = (-a30 * b05 + a32 * b02 - a33 * b01) * invDet;
-      out[7] = (a20 * b05 - a22 * b02 + a23 * b01) * invDet;
-      out[8] = (a10 * b10 - a11 * b08 + a13 * b06) * invDet;
-      out[9] = (-a00 * b10 + a01 * b08 - a03 * b06) * invDet;
-      out[10] = (a30 * b04 - a31 * b02 + a33 * b00) * invDet;
-      out[11] = (-a20 * b04 + a21 * b02 - a23 * b00) * invDet;
-      out[12] = (-a10 * b09 + a11 * b07 - a12 * b06) * invDet;
-      out[13] = (a00 * b09 - a01 * b07 + a02 * b06) * invDet;
-      out[14] = (-a30 * b03 + a31 * b01 - a32 * b00) * invDet;
-      out[15] = (a20 * b03 - a21 * b01 + a22 * b00) * invDet;
-
-      return out;
+      return new Float32Array([
+        (a11 * b11 - a12 * b10 + a13 * b09) * invDet,
+        (-a01 * b11 + a02 * b10 - a03 * b09) * invDet,
+        (a31 * b05 - a32 * b04 + a33 * b03) * invDet,
+        (-a21 * b05 + a22 * b04 - a23 * b03) * invDet,
+        (-a10 * b11 + a12 * b08 - a13 * b07) * invDet,
+        (a00 * b11 - a02 * b08 + a03 * b07) * invDet,
+        (-a30 * b05 + a32 * b02 - a33 * b01) * invDet,
+        (a20 * b05 - a22 * b02 + a23 * b01) * invDet,
+        (a10 * b10 - a11 * b08 + a13 * b06) * invDet,
+        (-a00 * b10 + a01 * b08 - a03 * b06) * invDet,
+        (a30 * b04 - a31 * b02 + a33 * b00) * invDet,
+        (-a20 * b04 + a21 * b02 - a23 * b00) * invDet,
+        (-a10 * b09 + a11 * b07 - a12 * b06) * invDet,
+        (a00 * b09 - a01 * b07 + a02 * b06) * invDet,
+        (-a30 * b03 + a31 * b01 - a32 * b00) * invDet,
+        (a20 * b03 - a21 * b01 + a22 * b00) * invDet
+      ]);
     },
 
     matrix4MultiplyWithMatrix: function(mat, mat2) {
-      var a00 = mat[0], a01 = mat[1], a02 = mat[2], a03 = mat[3],
+      const a00 = mat[0], a01 = mat[1], a02 = mat[2], a03 = mat[3],
         a10 = mat[4], a11 = mat[5], a12 = mat[6], a13 = mat[7],
         a20 = mat[8], a21 = mat[9], a22 = mat[10], a23 = mat[11],
         a30 = mat[12], a31 = mat[13], a32 = mat[14], a33 = mat[15],
@@ -277,7 +272,7 @@
     },
 
     matrix4ScaleWithVector: function(mat, vec) {
-      var x = vec[0], y = vec[1], z = vec[2];
+      const x = vec[0], y = vec[1], z = vec[2];
 
       return new Float32Array([
         mat[0] * x, mat[1] * x, mat[2] * x, mat[3] * x,
@@ -288,9 +283,9 @@
     },
 
     matrix4LookAtPoint: function(eye, center, up) {
-      var out = GLMath.matrix4();
+      let out = GLMath.matrix4();
 
-      var x0, x1, x2, y0, y1, y2, z0, z1, z2, len,
+      let x0, x1, x2, y0, y1, y2, z0, z1, z2, len,
         eyex = eye[0],
         eyey = eye[1],
         eyez = eye[2],
