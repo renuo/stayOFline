@@ -36,14 +36,14 @@ class Camera {
 
   get transformationMatrix() {
     let matrix = GLMath.matrix4Identity();
-    matrix = GLMath.matrix4Translate(matrix, this.getPositionVector());
+    matrix = GLMath.matrix4Translate(matrix, this.positionVector);
     matrix = GLMath.matrix4Rotate(matrix, this.rotation[0], [1, 0, 0]);
     matrix = GLMath.matrix4Rotate(matrix, this.rotation[1], [0, 1, 0]);
     matrix = GLMath.matrix4Rotate(matrix, this.rotation[2], [0, 0, 1]);
     return GLMath.matrix4Inverse(matrix);
   }
 
-  getPositionVector() {
+  get positionVector() {
     return [
       this.position[0] + this.offset[0],
       this.position[1] + this.offset[1],

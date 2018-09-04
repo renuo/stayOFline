@@ -11,9 +11,9 @@ class Game {
   setupWorld() {
     this.program = new BlockProgram(this.renderer.gl, 'vertex-shader', 'fragment-shader');
     this.world = new World();
-    this.world.light = new Light([10.0, 20.0, 25]);
+    this.world.light = new Light([10.0, 20.0, -20], [1.2, 0.02, 0.0]);
     this.world.camera.position = [10.0, 10.0, 0.0];
-    this.world.camera.offset[1] = 2.0;
+    this.world.camera.offset[1] = 2.5;
 
     this.setupModels();
     this.setupPlayer();
@@ -54,9 +54,13 @@ class Game {
 
   update(timePassedMs, msTimePassedSinceUpdate) {
     this.checkVictory();
-    this.updatePlayerMovement(msTimePassedSinceUpdate / 1000);
-    this.updatePlayerGravity(msTimePassedSinceUpdate / 1000);
-    this.updatePlayerPosition(msTimePassedSinceUpdate / 1000);
+
+    this.world.light.position = this.world.camera.positionVector;
+
+    const secondsPassedSinceUpdate = msTimePassedSinceUpdate / 1000;
+    this.updatePlayerMovement(secondsPassedSinceUpdate);
+    this.updatePlayerGravity(secondsPassedSinceUpdate);
+    this.updatePlayerPosition(secondsPassedSinceUpdate);
   }
 
   tearDown() {
