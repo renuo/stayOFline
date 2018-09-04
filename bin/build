@@ -3,7 +3,7 @@
 [ -d build ] || mkdir build
 rm build/*
 
-cp index.html styles.css build/
+cp index.html build/
 
 MARKER_START='<!-- BUILDJS_START -->'
 MARKER_END='<!-- BUILDJS_END -->'
@@ -11,7 +11,8 @@ MARKER_END='<!-- BUILDJS_END -->'
 JS_FILES=$(sed -n "/$MARKER_START/,/$MARKER_END/ { s/^.*src\=\"\(.*\)\".*/\1/p; }" index.html)
 JS_FILES=$(echo $JS_FILES | tr '\n' ' ')
 
-uglifyjs $JS_FILES -c -m -o build/lib.min.js
+node_modules/.bin/uglifyjs $JS_FILES -c -m -o build/lib.min.js
+node_modules/.bin/uglifycss styles.css > build/styles.css
 
 REPLACEMENT='<script src="lib.min.js"></script>'
 sed -i '' -e "/$MARKER_START/ , /$MARKER_END/ c\\

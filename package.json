@@ -4,7 +4,9 @@
   "description": "[![Build Status](https://semaphoreci.com/api/v1/renuo/palujo/branches/master/badge.svg)](https://semaphoreci.com/renuo/palujo)",
   "main": "main.js",
   "dependencies": {
-    "uglify-es": "github:mishoo/UglifyJS2#harmony"
+    "npm": "^6.4.1",
+    "uglify-es": "github:mishoo/UglifyJS2#harmony",
+    "uglifycss": "0.0.29"
   },
   "devDependencies": {},
   "scripts": {
