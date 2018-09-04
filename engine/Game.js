@@ -13,6 +13,7 @@ class Game {
     this.world = new World();
     this.world.light = new Light([10.0, 20.0, 25]);
     this.world.camera.position = [10.0, 10.0, 0.0];
+    this.world.camera.offset[1] = 2.0;
 
     this.setupModels();
     this.setupPlayer();

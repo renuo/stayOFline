@@ -6,10 +6,10 @@
   window.onload = function () {
     if ("ontouchstart" in document.documentElement) {
       debug("your device is a touch screen device.");
-      localStorage['isTouch'] = 1;
+      localStorage.setItem('isTouch', '1');
     } else {
       debug("your device is NOT a touch device");
-      localStorage['isTouch'] = 0;
+      localStorage.setItem('isTouch', '0');
     }
 
     canvas = document.getElementById('the-game');
@@ -30,7 +30,7 @@
   window.addEventListener('resize', resizeCanvas);
 
   function startGame(canvas) {
-    localStorage['running'] = 1;
+    localStorage.setItem('running', '1');
     themeManager = new ThemeManager();
     themeManager.startMusic();
     renderer = new Renderer(canvas);
@@ -41,12 +41,13 @@
 
   // TODO call this to stop the game
   function stopGame() {
-    localStorage['running'] = 0;
+    localStorage.setItem('running', '0');
     let deathMenu = document.getElementById('death-menu');
     deathMenu.style.removeProperty('display');
     canvas = document.getElementById('the-game');
     canvas.classList.toggle('game-stopped');
-    themeManager.stopMusic()
+    themeManager.stopMusic();
+    game.tearDown();
   }
 
   function resizeCanvas() {

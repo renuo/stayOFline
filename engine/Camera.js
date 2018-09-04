@@ -2,6 +2,7 @@ class Camera {
   constructor() {
     this.position = [0, 0, 0];
     this.rotation = [0, 0, 0];
+    this.offset = [0, 0, 0];
   }
 
   moveX(amount) {
@@ -35,10 +36,18 @@ class Camera {
 
   get transformationMatrix() {
     let matrix = GLMath.matrix4Identity();
-    matrix = GLMath.matrix4Translate(matrix, [this.position[0], this.position[1], this.position[2]]);
+    matrix = GLMath.matrix4Translate(matrix, this.getPositionVector());
     matrix = GLMath.matrix4Rotate(matrix, this.rotation[0], [1, 0, 0]);
     matrix = GLMath.matrix4Rotate(matrix, this.rotation[1], [0, 1, 0]);
     matrix = GLMath.matrix4Rotate(matrix, this.rotation[2], [0, 0, 1]);
     return GLMath.matrix4Inverse(matrix);
+  }
+
+  getPositionVector() {
+    return [
+      this.position[0] + this.offset[0],
+      this.position[1] + this.offset[1],
+      this.position[2] + this.offset[2]
+    ];
   }
 }
