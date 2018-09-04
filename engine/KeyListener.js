@@ -18,14 +18,14 @@ class KeyListener {
   }
 
   static move(dir, world) {
-    const v = 1;
+    const v = 0.07;
     const mapping = {
-      left: [-v, 0, 0],
-      right: [v, 0, 0],
+      left: -v,
+      right: v,
     };
 
     if (mapping[dir] !== undefined) {
-      world.camera.translate(mapping[dir]);
+      world.player.v[0] = mapping[dir];
     }
 
     if (dir === 'jump' && world.player.v[1] === 0) {

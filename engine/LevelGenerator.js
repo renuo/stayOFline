@@ -29,7 +29,7 @@ class LevelGenerator {
   _createCuboid(x, z) {
     const y = this._height(x, z);
     if (!y) return null;
-    return new Block(this.blockGeometry, 0.9, y, 1, [x, y/2, -z]);
+    return new Block(this.blockGeometry, 1, y, 1, [x, y/2, -z]);
   }
 
   _height(x, z) {

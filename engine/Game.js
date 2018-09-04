@@ -32,14 +32,14 @@ class Game {
     const flagBlocks = [
       new Block(blockGeometry, 1, 4, 1, [10, 3.5, -49]),
       new Block(blockGeometry, 2, 1, 2, [10, 4, -49]),
-      new Block(blockGeometry, 1.5, 1.5, 1.5, [10, 4, -49])
+      new Block(blockGeometry, 1.5, 1.5, 1.5, [10, 4, -49]),
+      new Block(blockGeometry, 10, 2, 2, [10, 2, -30])
     ];
     flagBlocks.forEach(block => this.world.models.push(block));
   }
 
   setupPlayer() {
     this.player = this.world.player;
-    this.player.v = [0, 0, 0];
   }
 
   loop() {
@@ -51,9 +51,11 @@ class Game {
     this.renderer.render(this.world.models, this.program, this.world.camera, this.world.light);
   };
 
-  update(timePassedMs, timePassedSinceUpdateMs) {
+  update(timePassedMs, msTimePassedSinceUpdate) {
     this.checkVictory();
-    this.updatePlayerGravity(timePassedSinceUpdateMs);
+    this.updatePlayerMovement(msTimePassedSinceUpdate / 1000);
+    this.updatePlayerGravity(msTimePassedSinceUpdate / 1000);
+    this.updatePlayerPosition(msTimePassedSinceUpdate / 1000);
   }
 
   tearDown() {
@@ -65,38 +67,42 @@ class Game {
 
   }
 
-  updatePlayerGravity(timePassedSinceUpdateMs) {
-    const vectorAdd = (a, b) => a.map((memo, i) => memo + b[i]); // TODO: where to put this?
+  updatePlayerMovement(dt) {
+    const vz = -5;
+    this.player.v[2] = vz * dt;
+  }
 
+  updatePlayerGravity(dt) {
     const g = -9.81 / 5;
-    const dt = (timePassedSinceUpdateMs / 1000);
-    const dv = g * dt;
+    const vy = g * dt;
+    this.player.v[1] += vy;
+  }
 
-    this.player.v[1] += dv;
-    const next_position = vectorAdd(this.player.position, this.player.v);
-
-    const mAboveGround = this.world.aboveGround(this.player.position);
-    const minAboveGroundConstraint = 0.1;
-    //console.log(`${mAboveGround}m above ground`);
-
-    if (mAboveGround > minAboveGroundConstraint) {
-      if (this.world.aboveGround(next_position) > minAboveGroundConstraint) {
-        this.player.position = next_position; // falling
-      } else {
-        this.player.v[1] = 0; // regular collision
-        this.player.moveY(minAboveGroundConstraint - Math.floor(mAboveGround*1000)/1000);
-      }
-    } else {
-      if (this.world.inAnyModel(this.player.position)) {
-        console.log('You\'re in a wall… WAT?');
-        // TODO: handle error
-      } else if (this.world.inAnyModel(next_position)) {
-        console.log('You\'re walking into a wall');
-        // TODO: handle collision
-      } else {
-        console.log('You\'re falling into the nether!')
-        this.player.position = next_position;
-      }
+  updatePlayerPosition(dt) {
+    if (this.world.inAnyModel(this.player.position)) {
+      console.log('You\'re in a wall… WAT?');
+      return;
     }
+
+    const vectorAdd = (a, b) => a.map((memo, i) => memo + b[i]); // TODO: where to put this?
+    let next_position = vectorAdd(this.player.position, this.player.v);
+
+    const minAboveGroundConstraint = 0.0;
+
+    // correct next position on collision
+    if (this.world.inAnyModel(next_position)) {
+      if (this.world.aboveGround(next_position) > minAboveGroundConstraint) {
+        // wall proximity
+        this.player.v[0] = 0;
+        this.player.v[2] = 0;
+      } else {
+        // floor collision imminent
+        const mAboveGround = this.world.aboveGround(this.player.position);
+        this.player.v[1] = minAboveGroundConstraint - Math.floor(mAboveGround*1000)/1000;
+      }
+      next_position = vectorAdd(this.player.position, this.player.v);
+    }
+
+    this.player.position = next_position;
   }
 }
