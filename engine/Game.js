@@ -11,7 +11,7 @@ class Game {
   setupWorld() {
     this.program = new BlockProgram(this.renderer.gl, 'vertex-shader', 'fragment-shader');
     this.world = new World();
-    this.world.light = new Light([10.0, 20.0, -20], [1.2, 0.02, 0.0]);
+    this.world.light = new Light([10.0, 20.0, -20], [1.0, 0.0002, 0.00005]);
     this.world.camera.position = [10.0, 10.0, 0.0];
     this.world.camera.offset[1] = 2.5;
 
@@ -78,7 +78,7 @@ class Game {
   }
 
   updatePlayerGravity(dt) {
-    const g = -9.81 / 5;
+    const g = -9.81 / 8;
     const vy = g * dt;
     this.player.v[1] += vy;
   }
