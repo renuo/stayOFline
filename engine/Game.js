@@ -73,7 +73,7 @@ class Game {
   }
 
   updatePlayerMovement(dt) {
-    const vz = -2;
+    const vz = -5;
     this.player.v[2] = vz * dt;
   }
 
