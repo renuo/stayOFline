@@ -1,25 +1,28 @@
 class Geometry {
-  constructor(gl, program, vertices, normals, indices) {
+  constructor(gl, program, vertices, normals, indices, textureCoordinates) {
     this.gl = gl;
     this.program = program;
     this.verticesBuffer = new VerticesBuffer(gl, vertices);
     this.normalsBuffer = new NormalsBuffer(gl, normals);
     this.indicesBuffer = new IndicesBuffer(gl, indices);
+    this.textureCoordinatesBuffer = new TextureCoordinatesBuffer(gl, textureCoordinates);
     this._describeBufferLayout();
   }
 
-  bind(lamda) {
+  bind(lambda) {
     this.verticesBuffer.bind();
+    this.textureCoordinatesBuffer.bind();
     this.indicesBuffer.bind();
 
-    if (lamda) {
-      lamda();
+    if (lambda) {
+      lambda();
       this.unbind();
     }
   }
 
   unbind() {
     this.verticesBuffer.unbind();
+    this.textureCoordinatesBuffer.unbind();
     this.indicesBuffer.unbind();
   }
 
@@ -30,6 +33,10 @@ class Geometry {
 
     this.normalsBuffer.bind(() => {
       this._describeNormalsBufferLayout();
+    });
+
+    this.textureCoordinatesBuffer.bind(() => {
+      this._describeTextureCoordinatesBufferLayout();
     });
   }
 
@@ -43,6 +50,12 @@ class Geometry {
     const normalsLocation = this.gl.getAttribLocation(this.program.program, 'normals');
     this.gl.vertexAttribPointer(normalsLocation, this.normalsBuffer.itemSize, this.gl.FLOAT, false, 0, 0);
     this.gl.enableVertexAttribArray(normalsLocation);
+  }
+  
+  _describeTextureCoordinatesBufferLayout() {
+    const textureCoordinatesLocation = this.gl.getAttribLocation(this.program.program, 'textureCoordinates');
+    this.gl.vertexAttribPointer(textureCoordinatesLocation, this.textureCoordinatesBuffer.itemSize, this.gl.FLOAT, false, 0, 0);
+    this.gl.enableVertexAttribArray(textureCoordinatesLocation);
   }
 
   tearDown() {

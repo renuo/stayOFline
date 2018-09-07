@@ -1,6 +1,6 @@
 class CubeGeometry extends Geometry {
   constructor(gl, program) {
-    super(gl, program, CubeGeometry.vertices, CubeGeometry.normals, CubeGeometry.vertexIndices)
+    super(gl, program, CubeGeometry.vertices, CubeGeometry.normals, CubeGeometry.vertexIndices, CubeGeometry.textureCoordinates)
   }
 
   static get vertices() {
@@ -40,6 +40,46 @@ class CubeGeometry extends Geometry {
       -0.5, -0.5,  0.5,
       -0.5,  0.5,  0.5,
       -0.5,  0.5, -0.5
+    ]);
+  }
+
+  static get textureCoordinates() {
+    return new Float32Array([
+      // front
+      0.0, 0.0,
+      1.0, 0.0,
+      1.0, 1.0,
+      0.0, 1.0,
+
+      // back
+      0.0, 0.0,
+      0.0, 1.0,
+      1.0, 1.0,
+      1.0, 0.0,
+
+      // top
+      0.0, 0.0,
+      0.0, 1.0,
+      1.0, 1.0,
+      1.0, 0.0,
+
+      // bottom
+      0.0, 0.0,
+      1.0, 0.0,
+      1.0, 1.0,
+      0.0, 1.0,
+
+      // right
+      0.0, 0.0,
+      1.0, 0.0,
+      1.0, 1.0,
+      0.0, 1.0,
+
+      // left
+      0.0, 0.0,
+      1.0, 0.0,
+      1.0, 1.0,
+      0.0, 1.0
     ]);
   }
 

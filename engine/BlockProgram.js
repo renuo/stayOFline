@@ -1,6 +1,8 @@
 class BlockProgram extends Program {
   constructor(gl, vertexShaderId, fragmentShaderId) {
     super(gl, vertexShaderId, fragmentShaderId);
+    this.texture = new StreetTexture(gl);
+
     this.bind(() => {
       this.uniformLocations = this.retrieveUniformLocations();
     });
@@ -15,7 +17,8 @@ class BlockProgram extends Program {
       lightPosition: this.getUniform('lightPosition'),
       lightColor: this.getUniform('lightColor'),
       lightAttenuation: this.getUniform('lightAttenuation'),
-      modelColor: this.getUniform('modelColor')
+      modelColor: this.getUniform('modelColor'),
+      sampler: this.getUniform('sampler')
     };
   }
 
@@ -34,5 +37,9 @@ class BlockProgram extends Program {
     this.gl.uniform3fv(this.uniformLocations.lightColor, new Float32Array(light.color));
     this.gl.uniform3fv(this.uniformLocations.modelColor, new Float32Array(model.color));
     this.gl.uniformMatrix3fv(this.uniformLocations.normalMatrix, false, this.createNormalMatrix(model.transformationMatrix, camera.transformationMatrix));
+
+    this.gl.activeTexture(this.gl.TEXTURE0);
+    this.texture.bind();
+    this.gl.uniform1i(this.uniformLocations.sampler, 0);
   }
 }
