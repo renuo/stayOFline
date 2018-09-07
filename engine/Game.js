@@ -84,30 +84,46 @@ class Game {
   }
 
   updatePlayerPosition(dt) {
-    if (this.world.inAnyModel(this.player.position)) {
+    const position = this.player.position;
+
+    if (this.world.inAnyModel(position)) {
       console.log('You\'re in a wall… WAT?');
       return;
     }
 
-    const vectorAdd = (a, b) => a.map((memo, i) => memo + b[i]); // TODO: where to put this?
-    let next_position = vectorAdd(this.player.position, this.player.v);
+    let iterations = 0;
+    const interpolateCollisionPoint = (a, b) => {
+      if (iterations++ >= 2) return a;
 
-    const minAboveGroundConstraint = 0.0;
-
-    // correct next position on collision
-    if (this.world.inAnyModel(next_position)) {
-      if (this.world.aboveGround(next_position) > minAboveGroundConstraint) {
-        // wall proximity
-        this.player.v[0] = 0;
-        this.player.v[2] = 0;
+      let intermediate = vectorAdd(a, b).map(x => x/2);
+      if (this.world.inAnyModel(intermediate)) {
+        return interpolateCollisionPoint(a, intermediate)
       } else {
-        // floor collision imminent
-        const mAboveGround = this.world.aboveGround(this.player.position);
-        this.player.v[1] = minAboveGroundConstraint - Math.floor(mAboveGround*1000)/1000;
+        return interpolateCollisionPoint(intermediate, b)
       }
-      next_position = vectorAdd(this.player.position, this.player.v);
+    };
+
+    const vectorAdd = (a, b) => a.map((memo, i) => memo + b[i]); // TODO: where to put this?
+    const vectorSub = (a, b) => a.map((memo, i) => memo - b[i]); // TODO: where to put this?
+    let next_position = vectorAdd(position, this.player.v);
+
+    if (this.world.inAnyModel(next_position)) {
+      const next_in_x = [next_position[0], position[1], position[2]];
+      if (this.world.inAnyModel(next_in_x)) {
+        this.player.v[0] = vectorSub(interpolateCollisionPoint(position, next_in_x), position)[0];
+      }
+
+      const next_in_y = [position[0], next_position[1], position[2]];
+      if (this.world.inAnyModel(next_in_y)) {
+        this.player.v[1] = vectorSub(interpolateCollisionPoint(position, next_in_y), position)[1];
+      }
+
+      const next_in_z = [position[0], position[1], next_position[2]];
+      if (this.world.inAnyModel(next_in_z)) {
+        this.player.v[2] = vectorSub(interpolateCollisionPoint(position, next_in_z), position)[2];
+      }
     }
 
-    this.player.position = next_position;
+    this.player.position = vectorAdd(position, this.player.v);
   }
 }
