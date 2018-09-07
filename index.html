@@ -54,6 +54,7 @@
         varying vec4 modelPosition;
         varying vec3 modelVertices;
         varying vec2 texCoords;
+        varying vec2 textureScale;
 
         uniform vec3 lightColor;
         uniform vec3 lightAttenuation;
@@ -80,7 +81,8 @@
           float edgeZFactor = clamp(getEdgeGlow(modelVertices.z), 0.0, 1.0);
           vec3 edgeColor = vec3(0.0, 0.7, 0.7) * edgeXFactor * edgeYFactor * edgeZFactor;
 
-          gl_FragColor = vec4((texture2D(sampler, texCoords).rgb + edgeColor) * totalDiffuse, 1.0);
+          vec3 textureColor = texture2D(sampler, texCoords * textureScale).rgb;
+          gl_FragColor = vec4((textureColor + edgeColor) * totalDiffuse, 1.0);
         }
     </script>
 
@@ -94,6 +96,7 @@
         varying vec4 modelPosition;
         varying vec3 modelVertices;
         varying vec2 texCoords;
+        varying vec2 textureScale;
 
         uniform mat4 projectionMatrix;
         uniform mat4 viewMatrix;
@@ -108,6 +111,8 @@
           lightDirection = (viewMatrix * vec4(lightPosition, 1.0)).xyz - modelPosition.xyz;
           modelNormals = normalMatrix * normals;
           texCoords = textureCoordinates;
+
+          textureScale = vec2(modelMatrix[0][0], modelMatrix[1][1]);
 
           gl_Position = projectionMatrix * modelPosition;
         }

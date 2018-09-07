@@ -4,7 +4,7 @@ function makeRGB(color) {
 
 class StreetTexture extends Texture {
   constructor(gl) {
-    super(gl, StreetTexture.generateTexture(16));
+    super(gl, StreetTexture.generateTexture(8));
   }
 
   static generateTexture(textureSize) {
