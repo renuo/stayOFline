@@ -4,19 +4,18 @@ function makeRGB(color) {
 
 class StreetTexture extends Texture {
   constructor(gl) {
-    super(gl, StreetTexture.generateTexture());
+    super(gl, StreetTexture.generateTexture(16));
   }
 
-  static generateTexture() {
+  static generateTexture(textureSize) {
     const can = document.createElement('canvas');
-    can.width = 16;
-    can.height = 16;
+    can.width = textureSize;
+    can.height = textureSize;
     const ctx = can.getContext('2d');
 
     const fillColor = [0.7, 0.7, 0.7];
-    const size = can.width;
-    const cubeCount = 8;
-    const cubeSize = size / cubeCount;
+    const cubeCount = textureSize;
+    const cubeSize = textureSize / cubeCount;
 
     for (let x = 0; x < cubeCount; x++) {
       for (let y = 0; y < cubeCount; y++) {
@@ -26,6 +25,6 @@ class StreetTexture extends Texture {
       }
     }
 
-    return can.toDataURL();
+    return ctx.getImageData(0, 0, textureSize, textureSize);
   }
 }
