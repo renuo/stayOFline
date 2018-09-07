@@ -14,15 +14,15 @@ class BlockProgram extends Program {
       normalMatrix: this.getUniform('normalMatrix'),
       lightPosition: this.getUniform('lightPosition'),
       lightColor: this.getUniform('lightColor'),
-      lightAttenuation: this.getUniform('lightAttenuation')
+      lightAttenuation: this.getUniform('lightAttenuation'),
+      modelColor: this.getUniform('modelColor')
     };
   }
 
   createNormalMatrix(modelMatrix, viewMatrix) {
     const modelViewMatrix = GLMath.matrix4MultiplyWithMatrix(viewMatrix, modelMatrix);
     let normalMatrix = GLMath.matrix4Inverse(modelViewMatrix);
-    normalMatrix = GLMath.matrix4Transpose(normalMatrix);
-    return GLMath.matrix4ConvertToMatrix3(normalMatrix);
+    return GLMath.matrix4ConvertToMatrix3(GLMath.matrix4Transpose(normalMatrix));
   }
 
   updateUniforms(renderer, model, camera, light) {
@@ -32,6 +32,7 @@ class BlockProgram extends Program {
     this.gl.uniform3fv(this.uniformLocations.lightPosition, new Float32Array(light.position));
     this.gl.uniform3fv(this.uniformLocations.lightAttenuation, new Float32Array(light.attenuation));
     this.gl.uniform3fv(this.uniformLocations.lightColor, new Float32Array(light.color));
+    this.gl.uniform3fv(this.uniformLocations.modelColor, new Float32Array(model.color));
     this.gl.uniformMatrix3fv(this.uniformLocations.normalMatrix, false, this.createNormalMatrix(model.transformationMatrix, camera.transformationMatrix));
   }
 }

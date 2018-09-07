@@ -4,6 +4,7 @@ class Model {
     this.position = [0, 0, 0];
     this.scale = [0, 0, 0];
     this.rotation = [0, 0, 0];
+    this.color = Colors.gray;
   }
 
   get transformationMatrix() {
