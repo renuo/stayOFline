@@ -13,7 +13,8 @@ class Game {
     this.world = new World();
     this.world.light = new Light([10.0, 20.0, -20], [0.6, 0.002, 0.00005]);
     this.world.camera.position = [10.0, 10.0, 0.0];
-    this.world.camera.offset[1] = 2.5;
+    this.world.camera.offset[1] = 1.7;
+    this.world.camera.offset[2] = 0.1;
 
     this.cubeGeometry = new CubeGeometry(this.renderer.gl, this.program);
     this.setupModels();

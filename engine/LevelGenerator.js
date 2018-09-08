@@ -33,7 +33,7 @@ class LevelGenerator {
   }
 
   _height(x, z) {
-    return this._flat(x, z) + this.minHeight; // TODO: vary functions
+    return this._ripple(x, z) + this.minHeight; // TODO: vary functions
   }
 
   _flat(x, z) {
