@@ -6,6 +6,7 @@ class World {
 
     this.player = this.camera;
     this.player.v = [0, 0, 0];
+
   }
 
   inAnyModel(position) {

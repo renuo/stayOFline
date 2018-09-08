@@ -1,11 +1,14 @@
 class Game {
-  constructor(renderer) {
+  constructor(renderer, onSuccess, onFailure) {
     this.renderer = renderer;
     this.setupWorld();
     this.startTime = (new Date()).getTime();
     this.lastFrame = this.startTime;
     this.keylistener = new KeyListener();
     this.keylistener.setupControls(this.world);
+    this.onSuccess = onSuccess;
+    this.onFailure = onFailure;
+    this.isRunning = true;
   }
 
   setupWorld() {
@@ -17,12 +20,12 @@ class Game {
     this.world.camera.offset[2] = 0.1;
 
     this.cubeGeometry = new CubeGeometry(this.renderer.gl, this.program);
-    this.setupModels();
+    this.setupLevel();
     this.setupPlayer();
     this.setupGoal();
   }
 
-  setupModels() {
+  setupLevel() {
     const level = new LevelGenerator(20, this.cubeGeometry);
     for (let z = 0; z < 50; z++) {
       level.produceGridLine().filter(b => b).forEach(block => this.world.models.push(block));
@@ -30,13 +33,20 @@ class Game {
   }
 
   setupGoal() {
-    const flagBlocks = [
-      new Block(this.cubeGeometry, 1, 4, 1, [10, 3.5, -49]),
-      new Block(this.cubeGeometry, 2, 1, 2, [10, 4, -49], Colors.green),
-      new Block(this.cubeGeometry, 1.5, 1.5, 1.5, [10, 4, -49]),
-      new Block(this.cubeGeometry, 10, 2, 2, [10, 2, -30])
+    this.goalPosition = [10, 0, -49];
+
+    const goalDoor = [
+       new Block(this.cubeGeometry, 1, 1, 1, [2, 0.5, 0]),
+       new Block(this.cubeGeometry, 1, 1, 1, [-2, 0.5, 0]),
+       new Block(this.cubeGeometry, 0.7, 3, 0.7, [2, 2.5, 0], Colors.green),
+       new Block(this.cubeGeometry, 0.7, 3, 0.7, [-2, 2.5, 0]),
+       new Block(this.cubeGeometry, 1, 0.5, 1, [2, 4.25, 0]),
+       new Block(this.cubeGeometry, 1, 0.5, 1, [-2, 4.25, 0]),
+       new Block(this.cubeGeometry, 5.5, 0.5, 2, [0, 4.5, 0]),
     ];
-    flagBlocks.forEach(block => this.world.models.push(block));
+
+    goalDoor.forEach(block => block.position = VMath.vectorAdd(this.goalPosition, block.position));
+    goalDoor.forEach(block => this.world.models.push(block));
   }
 
   setupPlayer() {
@@ -50,10 +60,12 @@ class Game {
 
     this.renderer.prepareRendering();
     this.renderer.render(this.world.models, this.program, this.world.camera, this.world.light);
+
+
   };
 
   update(timePassedMs, msTimePassedSinceUpdate) {
-    this.checkVictory();
+    this.checkGameState();
 
     this.world.light.position = this.world.camera.positionVector;
     this.world.light.position[1] += 1.5;
@@ -69,8 +81,16 @@ class Game {
     //this.model.geometry.tearDown();
   }
 
-  checkVictory() {
+  checkGameState() {
+    if (VMath.vectorDistance(this.goalPosition, this.player.position) < 3) {
+      this.onSuccess();
+      this.isRunning = false;
+    }
 
+    if (this.player.position[1] < -10) {
+      this.onFailure();
+      this.isRunning = false;
+    }
   }
 
   updatePlayerMovement(dt) {
@@ -80,8 +100,7 @@ class Game {
 
   updatePlayerGravity(dt) {
     const g = -9.81 / 5;
-    const vy = g * dt;
-    this.player.v[1] += vy;
+    this.player.v[1] += g * dt;
   }
 
   updatePlayerPosition(dt) {
@@ -89,6 +108,7 @@ class Game {
 
     if (this.world.inAnyModel(position)) {
       console.log('You\'re in a wall… WAT?');
+      // TODO: correct position
       return;
     }
 
@@ -96,7 +116,7 @@ class Game {
     const interpolateCollisionPoint = (a, b) => {
       if (iterations++ >= 2) return a;
 
-      let intermediate = vectorAdd(a, b).map(x => x/2);
+      let intermediate = VMath.vectorAdd(a, b).map(x => x/2);
       if (this.world.inAnyModel(intermediate)) {
         return interpolateCollisionPoint(a, intermediate)
       } else {
@@ -104,27 +124,25 @@ class Game {
       }
     };
 
-    const vectorAdd = (a, b) => a.map((memo, i) => memo + b[i]); // TODO: where to put this?
-    const vectorSub = (a, b) => a.map((memo, i) => memo - b[i]); // TODO: where to put this?
-    let next_position = vectorAdd(position, this.player.v);
+    let next_position = VMath.vectorAdd(position, this.player.v);
 
     if (this.world.inAnyModel(next_position)) {
       const next_in_x = [next_position[0], position[1], position[2]];
       if (this.world.inAnyModel(next_in_x)) {
-        this.player.v[0] = vectorSub(interpolateCollisionPoint(position, next_in_x), position)[0];
+        this.player.v[0] = VMath.vectorSub(interpolateCollisionPoint(position, next_in_x), position)[0];
       }
 
       const next_in_y = [position[0], next_position[1], position[2]];
       if (this.world.inAnyModel(next_in_y)) {
-        this.player.v[1] = vectorSub(interpolateCollisionPoint(position, next_in_y), position)[1];
+        this.player.v[1] = VMath.vectorSub(interpolateCollisionPoint(position, next_in_y), position)[1];
       }
 
       const next_in_z = [position[0], position[1], next_position[2]];
       if (this.world.inAnyModel(next_in_z)) {
-        this.player.v[2] = vectorSub(interpolateCollisionPoint(position, next_in_z), position)[2];
+        this.player.v[2] = VMath.vectorSub(interpolateCollisionPoint(position, next_in_z), position)[2];
       }
     }
 
-    this.player.position = vectorAdd(position, this.player.v);
+    this.player.position = VMath.vectorAdd(position, this.player.v);
   }
 }

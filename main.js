@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  let game, canvas, renderer, startBtn, startMenu, restartBtn, themeManager;
+  let game, canvas, renderer, startBtn, startMenu, restartBtn, againBtn, themeManager;
 
   window.onload = function () {
     if ("ontouchstart" in document.documentElement) {
@@ -16,32 +16,38 @@
     startMenu = document.getElementById('start-menu');
     startBtn = document.getElementById('start-btn');
     restartBtn = document.getElementById('restart-btn');
+    againBtn = document.getElementById('again-btn');
     startBtn.onclick = function () {
       canvas.classList.toggle('game-stopped');
       startMenu.classList.toggle('game-stopped');
       startGame(canvas);
     };
 
-    restartBtn.onclick = function () {
-      location.reload();
-    };
+    restartBtn.onclick = () => location.reload();
+    againBtn.onclick = () => location.reload();
   };
 
   window.addEventListener('resize', resizeCanvas);
 
   function startGame(canvas) {
-    localStorage.setItem('running', '1');
     themeManager = new ThemeManager();
     themeManager.startMusic();
     renderer = new Renderer(canvas);
-    game = new Game(renderer);
+    game = new Game(renderer, gameSuccessHandler, gameFailureHandler);
     resizeCanvas();
     mainLoop();
   }
 
-  // TODO call this to stop the game
-  function stopGame() {
-    localStorage.setItem('running', '0');
+  function gameSuccessHandler() {
+    let victoryMenu = document.getElementById('victory-menu');
+    victoryMenu.style.removeProperty('display');
+    canvas = document.getElementById('the-game');
+    canvas.classList.toggle('game-stopped');
+    themeManager.stopMusic();
+    game.tearDown();
+  }
+
+  function gameFailureHandler() {
     let deathMenu = document.getElementById('death-menu');
     deathMenu.style.removeProperty('display');
     canvas = document.getElementById('the-game');
@@ -58,7 +64,7 @@
   }
 
   function mainLoop() {
-    game.loop();
+    if (game.isRunning) game.loop();
     requestAnimationFrame(mainLoop);
   }
 })();

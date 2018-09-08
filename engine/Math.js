@@ -1,6 +1,12 @@
 (function() {
   "use strict";
 
+  window.VMath = {
+    vectorAdd: (a, b) => a.map((memo, i) => memo + b[i]),
+    vectorSub: (a, b) => a.map((memo, i) => memo - b[i]),
+    vectorDistance: (a, b) => Math.hypot(...a.map((memo, i) => memo - b[i]))
+  };
+
   window.GLMath = {
     degToRad: function(deg) {
       return deg * Math.PI / 180;

@@ -26,6 +26,10 @@ body {
     background-color: #B0040B;
 }
 
+#victory-menu {
+    background-color: #00b05b;
+}
+
 .screen {
     position: absolute;
     top: 0;
