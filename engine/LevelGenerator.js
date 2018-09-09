@@ -9,17 +9,18 @@ function getRandomIntInclusive(min, max) {
 class LevelGenerator {
   constructor(lineWidth, geometryTemplate, levelNumber) {
     this.blockGeometry = geometryTemplate;
+    this.levelNumber = levelNumber;
     this.lineWidth = lineWidth;
 
     this.lineNumber = 0;
-    this.minHeight = 1;
+    this.zOffset = 1;
   }
 
   produceGridLine() {
     const line = new Array(this.lineWidth);
 
     for (let x = 0; x < this.lineWidth; x++) {
-      line[x] = this._createCuboid(x, this.lineNumber);
+      line[x] = this._createCuboid(x, -this.lineNumber);
     }
 
     this.lineNumber++;
@@ -27,50 +28,32 @@ class LevelGenerator {
   }
 
   _createCuboid(x, z) {
-    const y = this._height(x, z);
-    if (!y) return null;
-    return new Block(this.blockGeometry, 1, y, 1, [x, y/2, -z]);
+    let y = this._height(x, z);
+    if (isNaN(y)) return null;
+    y += this.zOffset;
+    return new Block(this.blockGeometry, 1, y, 1, [x, y/2, z]);
   }
 
   _height(x, z) {
-    return this._ripple(x, z) + this.minHeight; // TODO: vary functions
+    return this[`_level${this.levelNumber}`](x, z);
   }
 
-  _flat(x, z) {
+  _level1(x, z) {
+    if (z === -15) return undefined;
+    if (x+z === -20) return undefined;
+    if (x-z === 40) return 0.5;
     return 0;
   }
-
-  _sincos(x, z) {
+  _level2(x, z) {
     return Math.sin(5*x) * Math.cos(5*z) / 5;
   }
-
-  _ripple(x, z) {
-    return Math.sin(10*(Math.sqrt((z*z)+(x*x))))/10;
+  _level3(x, z) {
+    return 0;
   }
-
-  _pyramid(x, z) {
-    return 1-Math.abs(x+z)-Math.abs(z-x);
+  _level4(x, z) {
+    return 0;
   }
-
-  _cutRoadGrid() {
-    for (let i = 0; i < this.depth; i++) {
-      if (Math.random() < 0.2) {
-        if (i > 0 && this.map[i-1][0] !== 0) {
-          for (let j = 0; j < this.width; j++) {
-            this.map[i][j] = 0;
-          }
-        }
-      }
-    }
-
-    for (let i = 0; i < this.width; i++) {
-      if (Math.random() < 0.2) {
-        if (i > 0 && this.map[0][i-1] !== 0) {
-          for (let j = 0; j < this.depth; j++) {
-            this.map[j][i] = 0;
-          }
-        }
-      }
-    }
+  _level5(x, z) {
+    return Math.sin(10*(Math.sqrt((z*z)+(x*x))))/5;
   }
 }

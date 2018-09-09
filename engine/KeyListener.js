@@ -1,10 +1,8 @@
 class KeyListener {
   setupControls(world) {
     if (localStorage.isTouch === '1') {
-      debug('Swipe to move, tap to jump');
       this.swipedetect(window, world);
     } else {
-      debug('AD to move, Space to jump');
       window.addEventListener('keydown', (event) => {
         const mapping = {
           a: 'left',
@@ -31,8 +29,6 @@ class KeyListener {
     if (dir === 'jump' && world.player.v[1] === 0) {
       world.player.v[1] += 0.45; // Source: https://www.whatsmyvertical.com/the-physics-of-the-vertical-jump/
     }
-
-    debug(world.camera.transformationMatrix);
   }
 
 

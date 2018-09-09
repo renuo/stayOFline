@@ -21,6 +21,9 @@ body {
 #start-menu {
     background-color: #3F54B1;
 }
+#start-menu ul li {
+    list-style: none;
+}
 
 #death-menu {
     background-color: #B0040B;
@@ -44,12 +47,7 @@ h1, h2 {
 }
 
 h1 {
-    padding-top: 20px;
-    font-size: 4em;
-}
-
-h2{
-    font-size: 2em;
+    font-size: 3em;
 }
 
 .game-stopped {
@@ -62,11 +60,11 @@ h2{
     text-decoration: none;
     background-color: #4caf50;
     font-weight: 700;
-    font-size: 3em;
+    font-size: 2em;
     display: block;
     padding: 4px;
     box-shadow: 0 9px 0 #4caf50db, 0 10px 30px #000;
-    margin: 100px auto;
+    margin: 30px auto;
     width: 80%;
     text-align: center;
 

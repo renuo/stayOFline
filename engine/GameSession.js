@@ -1,15 +1,15 @@
 class GameSession {
   constructor(renderer, onSuccess, onFailure, levelNumber) {
     this.renderer = renderer;
+    this.onSuccess = onSuccess;
+    this.onFailure = onFailure;
+    this.levelNumber = levelNumber;
     this.setupWorld();
     this.startTime = (new Date()).getTime();
     this.lastFrame = this.startTime;
     this.keylistener = new KeyListener();
     this.keylistener.setupControls(this.world);
-    this.onSuccess = onSuccess;
-    this.onFailure = onFailure;
     this.isRunning = true;
-    this.levelNumber = levelNumber;
   }
 
   setupWorld() {
@@ -64,6 +64,7 @@ class GameSession {
   };
 
   update(timePassedMs, msTimePassedSinceUpdate) {
+    debug(this.player.position)
     this.checkGameState();
 
     this.world.light.position = this.world.camera.positionVector;
