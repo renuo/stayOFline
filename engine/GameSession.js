@@ -1,5 +1,5 @@
-class Game {
-  constructor(renderer, onSuccess, onFailure) {
+class GameSession {
+  constructor(renderer, onSuccess, onFailure, levelNumber) {
     this.renderer = renderer;
     this.setupWorld();
     this.startTime = (new Date()).getTime();
@@ -9,6 +9,7 @@ class Game {
     this.onSuccess = onSuccess;
     this.onFailure = onFailure;
     this.isRunning = true;
+    this.levelNumber = levelNumber;
   }
 
   setupWorld() {
@@ -26,7 +27,7 @@ class Game {
   }
 
   setupLevel() {
-    const level = new LevelGenerator(20, this.cubeGeometry);
+    const level = new LevelGenerator(20, this.cubeGeometry, this.levelNumber);
     for (let z = 0; z < 50; z++) {
       level.produceGridLine().filter(b => b).forEach(block => this.world.models.push(block));
     }
@@ -60,8 +61,6 @@ class Game {
 
     this.renderer.prepareRendering();
     this.renderer.render(this.world.models, this.program, this.world.camera, this.world.light);
-
-
   };
 
   update(timePassedMs, msTimePassedSinceUpdate) {

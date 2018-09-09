@@ -7,7 +7,7 @@ function getRandomIntInclusive(min, max) {
 */
 
 class LevelGenerator {
-  constructor(lineWidth, geometryTemplate) {
+  constructor(lineWidth, geometryTemplate, levelNumber) {
     this.blockGeometry = geometryTemplate;
     this.lineWidth = lineWidth;
 

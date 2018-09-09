@@ -1,6 +1,6 @@
 class KeyListener {
   setupControls(world) {
-    if (localStorage.isTouch == 1) {
+    if (localStorage.isTouch === '1') {
       debug('Swipe to move, tap to jump');
       this.swipedetect(window, world);
     } else {

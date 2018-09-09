@@ -1,70 +1,60 @@
-(function () {
-  "use strict";
-
-  let game, canvas, renderer, startBtn, startMenu, restartBtn, againBtn, themeManager;
-
-  window.onload = function () {
-    if ("ontouchstart" in document.documentElement) {
-      debug("your device is a touch screen device.");
-      localStorage.setItem('isTouch', '1');
-    } else {
-      debug("your device is NOT a touch device");
-      localStorage.setItem('isTouch', '0');
-    }
-
-    canvas = document.getElementById('the-game');
-    startMenu = document.getElementById('start-menu');
-    startBtn = document.getElementById('start-btn');
-    restartBtn = document.getElementById('restart-btn');
-    againBtn = document.getElementById('again-btn');
-    startBtn.onclick = function () {
-      canvas.classList.toggle('game-stopped');
-      startMenu.classList.toggle('game-stopped');
-      startGame(canvas);
-    };
-
-    restartBtn.onclick = () => location.reload();
-    againBtn.onclick = () => location.reload();
-  };
-
-  window.addEventListener('resize', resizeCanvas);
-
-  function startGame(canvas) {
-    themeManager = new ThemeManager();
-    themeManager.startMusic();
-    renderer = new Renderer(canvas);
-    game = new Game(renderer, gameSuccessHandler, gameFailureHandler);
-    resizeCanvas();
-    mainLoop();
+class GameManager {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.renderer = new Renderer(this.canvas);
+    this.themeManager = new ThemeManager();
   }
 
-  function gameSuccessHandler() {
+  startLevel(levelNumber) {
+    this.canvas.classList.toggle('game-stopped');
+
+    this.themeManager.startMusic();
+    this.game = new GameSession(
+      this.renderer,
+      this.gameSuccessHandler.bind(this),
+      this.gameFailureHandler.bind(this),
+      levelNumber
+    );
+    this.resizeCanvas();
+    this.mainLoop();
+  }
+
+  gameSuccessHandler() {
     let victoryMenu = document.getElementById('victory-menu');
     victoryMenu.style.removeProperty('display');
-    canvas = document.getElementById('the-game');
-    canvas.classList.toggle('game-stopped');
-    themeManager.stopMusic();
-    game.tearDown();
+    this.canvas = document.getElementById('the-game');
+    this.canvas.classList.toggle('game-stopped');
+    this.themeManager.stopMusic();
+    this.game.tearDown();
   }
 
-  function gameFailureHandler() {
+  gameFailureHandler() {
     let deathMenu = document.getElementById('death-menu');
     deathMenu.style.removeProperty('display');
-    canvas = document.getElementById('the-game');
-    canvas.classList.toggle('game-stopped');
-    themeManager.stopMusic();
-    game.tearDown();
+    this.canvas = document.getElementById('the-game');
+    this.canvas.classList.toggle('game-stopped');
+    this.themeManager.stopMusic();
+    this.game.tearDown();
   }
 
-  function resizeCanvas() {
+  resizeCanvas() {
     const devicePixelRatio = window.devicePixelRatio || 1;
-    canvas.width = window.innerWidth * devicePixelRatio;
-    canvas.height = window.innerHeight * devicePixelRatio;
-    renderer.resizeViewport();
+    this.canvas.width = window.innerWidth * devicePixelRatio;
+    this.canvas.height = window.innerHeight * devicePixelRatio;
+    this.renderer.resizeViewport();
   }
 
-  function mainLoop() {
-    if (game.isRunning) game.loop();
-    requestAnimationFrame(mainLoop);
+  mainLoop() {
+    if (this.game.isRunning) {
+      this.game.loop();
+      requestAnimationFrame(this.mainLoop.bind(this));
+    }
   }
-})();
+}
+
+let g;
+window.addEventListener('resize', () => g.resizeCanvas());
+window.onload = function () {
+  localStorage.setItem('isTouch', ("ontouchstart" in document.documentElement) | 0);
+  g = new GameManager(document.getElementById('the-game'));
+};
