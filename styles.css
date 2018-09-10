@@ -67,6 +67,10 @@ h1 {
     margin: 30px auto;
     width: 80%;
     text-align: center;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 
     transition: all .1s ease;
 }
