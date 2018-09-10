@@ -36,14 +36,15 @@ class GameSession {
   setupGoal() {
     this.goalPosition = [10, 0, -49];
 
+    const tintColor = [...Colors.green, 0.6];
     const goalDoor = [
-       new Block(this.cubeGeometry, 1, 1, 1, [2, 0.5, 0]),
-       new Block(this.cubeGeometry, 1, 1, 1, [-2, 0.5, 0]),
-       new Block(this.cubeGeometry, 0.7, 3, 0.7, [2, 2.5, 0], Colors.green),
-       new Block(this.cubeGeometry, 0.7, 3, 0.7, [-2, 2.5, 0]),
-       new Block(this.cubeGeometry, 1, 0.5, 1, [2, 4.25, 0]),
-       new Block(this.cubeGeometry, 1, 0.5, 1, [-2, 4.25, 0]),
-       new Block(this.cubeGeometry, 5.5, 0.5, 2, [0, 4.5, 0]),
+       new Block(this.cubeGeometry, 1, 1, 1, [2, 0.5, 0], tintColor),
+       new Block(this.cubeGeometry, 1, 1, 1, [-2, 0.5, 0], tintColor),
+       new Block(this.cubeGeometry, 0.7, 3, 0.7, [2, 2.5, 0], tintColor),
+       new Block(this.cubeGeometry, 0.7, 3, 0.7, [-2, 2.5, 0], tintColor),
+       new Block(this.cubeGeometry, 1, 0.5, 1, [2, 4.25, 0], tintColor),
+       new Block(this.cubeGeometry, 1, 0.5, 1, [-2, 4.25, 0], tintColor),
+       new Block(this.cubeGeometry, 5.5, 0.5, 2, [0, 4.5, 0], tintColor),
     ];
 
     goalDoor.forEach(block => block.position = VMath.vectorAdd(this.goalPosition, block.position));

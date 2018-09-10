@@ -17,7 +17,7 @@ class BlockProgram extends Program {
       lightPosition: this.getUniform('lightPosition'),
       lightColor: this.getUniform('lightColor'),
       lightAttenuation: this.getUniform('lightAttenuation'),
-      modelColor: this.getUniform('modelColor'),
+      tintColor: this.getUniform('tintColor'),
       sampler: this.getUniform('sampler')
     };
   }
@@ -35,7 +35,7 @@ class BlockProgram extends Program {
     this.gl.uniform3fv(this.uniformLocations.lightPosition, new Float32Array(light.position));
     this.gl.uniform3fv(this.uniformLocations.lightAttenuation, new Float32Array(light.attenuation));
     this.gl.uniform3fv(this.uniformLocations.lightColor, new Float32Array(light.color));
-    this.gl.uniform3fv(this.uniformLocations.modelColor, new Float32Array(model.color));
+    this.gl.uniform4fv(this.uniformLocations.tintColor, new Float32Array(model.tintColor));
     this.gl.uniformMatrix3fv(this.uniformLocations.normalMatrix, false, this.createNormalMatrix(model.transformationMatrix, camera.transformationMatrix));
 
     this.gl.activeTexture(this.gl.TEXTURE0);

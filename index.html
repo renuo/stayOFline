@@ -58,7 +58,7 @@
 
         uniform vec3 lightColor;
         uniform vec3 lightAttenuation;
-        uniform vec3 modelColor;
+        uniform vec4 tintColor;
         uniform sampler2D sampler;
 
         float getAttenuation(float lightDistance) {
@@ -82,7 +82,8 @@
           vec3 edgeColor = vec3(0.0, 0.7, 0.7) * edgeXFactor * edgeYFactor * edgeZFactor;
 
           vec3 textureColor = texture2D(sampler, texCoords * textureScale).rgb;
-          gl_FragColor = vec4((textureColor + edgeColor) * totalDiffuse, 1.0);
+          vec3 tint = tintColor.rgb * tintColor.a;
+          gl_FragColor = vec4((textureColor + edgeColor + tint) * totalDiffuse, 1.0);
         }
     </script>
 
