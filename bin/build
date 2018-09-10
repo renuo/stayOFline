@@ -20,4 +20,4 @@ REPLACEMENT='<script src="lib.min.js"></script>'
 sed -i -e "/$MARKER_START/ , /$MARKER_END/ c\\
 $REPLACEMENT
 "  build/index.html
-rm build/index.html-e
+[ -f build/index.html-e ] && rm build/index.html-e
