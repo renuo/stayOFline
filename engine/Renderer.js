@@ -19,7 +19,6 @@ class Renderer {
     this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
     this.gl.colorMask(true, true, true, true);
     this.projectionMatrix = GLMath.projectionMatrix(30, 0.1, 1000, this.canvas.width / this.canvas.height);
-    // this.projectionMatrix = GLMath.orthographicMatrix(-5.0, 5.0, -5.0, 5.0, -5.0, 5.0);
   };
 
   renderRequest(callback) {

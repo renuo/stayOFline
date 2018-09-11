@@ -2,6 +2,7 @@ class World {
   constructor() {
     this.camera = new Camera();
     this.light = null;
+    this.ambientLightColor = [...Colors.white, 0.1];
     this.models = [];
     this.goal = [];
 

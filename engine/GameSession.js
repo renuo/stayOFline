@@ -68,7 +68,7 @@ class GameSession {
 
   drawFrame() {
     this.renderer.renderRequest(context => {
-      context.withEnvironment(this.world.camera, this.world.light, () => {
+      context.withEnvironment(this.world.camera, this.world.light, this.world.ambientLightColor, () => {
         context.withGeometryAndProgram(this.cubeGeometry, this.program, () => {
           context.render(this.world.models);
           context.render(this.world.goal);
