@@ -60,12 +60,15 @@ class GameSession {
     this.update(currentTime - this.startTime, currentTime - this.lastFrame);
     this.lastFrame = currentTime;
 
+    if (!this.isRunning)
+      return;
+
     this.renderer.prepareRendering();
     this.renderer.render(this.world.models, this.program, this.world.camera, this.world.light);
   };
 
   update(timePassedMs, msTimePassedSinceUpdate) {
-    debug(this.player.position)
+    debug(this.player.position);
     this.checkGameState();
 
     this.world.light.position = this.world.camera.positionVector;
@@ -79,7 +82,7 @@ class GameSession {
 
   tearDown() {
     this.program.tearDown();
-    //this.model.geometry.tearDown();
+    this.cubeGeometry.tearDown();
   }
 
   checkGameState() {
@@ -125,22 +128,22 @@ class GameSession {
       }
     };
 
-    let next_position = VMath.vectorAdd(position, this.player.v);
+    let nextPosition = VMath.vectorAdd(position, this.player.v);
 
-    if (this.world.inAnyModel(next_position)) {
-      const next_in_x = [next_position[0], position[1], position[2]];
-      if (this.world.inAnyModel(next_in_x)) {
-        this.player.v[0] = VMath.vectorSub(interpolateCollisionPoint(position, next_in_x), position)[0];
+    if (this.world.inAnyModel(nextPosition)) {
+      const nextInX = [nextPosition[0], position[1], position[2]];
+      if (this.world.inAnyModel(nextInX)) {
+        this.player.v[0] = VMath.vectorSub(interpolateCollisionPoint(position, nextInX), position)[0];
       }
 
-      const next_in_y = [position[0], next_position[1], position[2]];
-      if (this.world.inAnyModel(next_in_y)) {
-        this.player.v[1] = VMath.vectorSub(interpolateCollisionPoint(position, next_in_y), position)[1];
+      const nextInY = [position[0], nextPosition[1], position[2]];
+      if (this.world.inAnyModel(nextInY)) {
+        this.player.v[1] = VMath.vectorSub(interpolateCollisionPoint(position, nextInY), position)[1];
       }
 
-      const next_in_z = [position[0], position[1], next_position[2]];
-      if (this.world.inAnyModel(next_in_z)) {
-        this.player.v[2] = VMath.vectorSub(interpolateCollisionPoint(position, next_in_z), position)[2];
+      const nextInZ = [position[0], position[1], nextPosition[2]];
+      if (this.world.inAnyModel(nextInZ)) {
+        this.player.v[2] = VMath.vectorSub(interpolateCollisionPoint(position, nextInZ), position)[2];
       }
     }
 
