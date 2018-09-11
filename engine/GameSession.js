@@ -15,7 +15,7 @@ class GameSession {
   setupWorld() {
     this.program = new BlockProgram(this.renderer.gl, 'vertex-shader', 'fragment-shader');
     this.world = new World();
-    this.world.light = new Light([10.0, 20.0, -20], [0.6, 0.002, 0.00005]);
+    this.world.light = new Light([10.0, 20.0, -20], [1.0, 0.005, 0.0004]);
     this.world.camera.position = [10.0, 10.0, 0.0];
     this.world.camera.offset[1] = 1.7;
     this.world.camera.offset[2] = 0.1;
@@ -48,7 +48,7 @@ class GameSession {
     ];
 
     goalDoor.forEach(block => block.position = VMath.vectorAdd(this.goalPosition, block.position));
-    goalDoor.forEach(block => this.world.models.push(block));
+    this.world.goal = goalDoor;
   }
 
   setupPlayer() {
@@ -63,9 +63,19 @@ class GameSession {
     if (!this.isRunning)
       return;
 
-    this.renderer.prepareRendering();
-    this.renderer.render(this.world.models, this.program, this.world.camera, this.world.light);
+    this.drawFrame();
   };
+
+  drawFrame() {
+    this.renderer.renderRequest(context => {
+      context.withEnvironment(this.world.camera, this.world.light, () => {
+        context.withGeometryAndProgram(this.cubeGeometry, this.program, () => {
+          context.render(this.world.models);
+          context.render(this.world.goal);
+        });
+      });
+    });
+  }
 
   update(timePassedMs, msTimePassedSinceUpdate) {
     debug(this.player.position);
@@ -98,12 +108,12 @@ class GameSession {
   }
 
   updatePlayerMovement(dt) {
-    const vz = -5;
+    const vz = -6;
     this.player.v[2] = vz * dt;
   }
 
   updatePlayerGravity(dt) {
-    const g = -9.81 / 5;
+    const g = -9.81 / 8.5;
     this.player.v[1] += g * dt;
   }
 
