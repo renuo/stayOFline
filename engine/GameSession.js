@@ -3,7 +3,7 @@ class GameSession {
     this.renderer = renderer;
     this.onSuccess = onSuccess;
     this.onFailure = onFailure;
-    this.levelNumber = levelNumber;
+    this.levelNumber = levelNumber; // TODO: select different level
     this.setupWorld();
     this.startTime = (new Date()).getTime();
     this.lastFrame = this.startTime;
@@ -27,10 +27,8 @@ class GameSession {
   }
 
   setupLevel() {
-    const level = new LevelGenerator(20, this.cubeGeometry, this.levelNumber);
-    for (let z = 0; z < 50; z++) {
-      level.produceGridLine().filter(b => b).forEach(block => this.world.models.push(block));
-    }
+    const level = new LevelGenerator(this.cubeGeometry);
+    level.allBlocks.forEach(block => this.world.models.push(block));
   }
 
   setupGoal() {
