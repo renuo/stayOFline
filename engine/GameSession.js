@@ -22,6 +22,7 @@ class GameSession {
 
     this.cubeGeometry = new CubeGeometry(this.renderer.gl, this.program);
     this.setupLevel();
+    this.setupOpponents();
     this.setupPlayer();
     this.setupGoal();
   }
@@ -29,6 +30,14 @@ class GameSession {
   setupLevel() {
     const level = new LevelGenerator(this.cubeGeometry);
     level.allBlocks.forEach(block => this.world.models.push(block));
+  }
+
+  setupOpponents() {
+    const tintColor = [...Colors.red, 0.6];
+    [
+      new Block(this.cubeGeometry, 1, 2, 1, [2, 1, -40], tintColor),
+      new Block(this.cubeGeometry, 1, 2, 1, [10, 1, -40], tintColor)
+    ].forEach(block => this.world.opponents.push(block));
   }
 
   setupGoal() {
@@ -70,6 +79,7 @@ class GameSession {
         context.withGeometryAndProgram(this.cubeGeometry, this.program, () => {
           context.render(this.world.models);
           context.render(this.world.goal);
+          context.render(this.world.opponents);
         });
       });
     });

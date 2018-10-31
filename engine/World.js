@@ -6,9 +6,10 @@ class World {
     this.models = [];
     this.goal = [];
 
+    this.opponents = [];
+
     this.player = this.camera;
     this.player.v = [0, 0, 0];
-
   }
 
   inAnyModel(position) {

@@ -17,7 +17,6 @@ class Camera {
     this.translate([0, 0, amount]);
   }
 
-  // TODO: Remove all rotation code in the final version
   rotateX(amount) {
     this.rotation = [this.rotation[0] + amount, 0, 0];
   }
