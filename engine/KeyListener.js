@@ -1,7 +1,6 @@
 class KeyListener {
   setupControls(world) {
     window.addEventListener('keydown', (event) => {
-      console.log(event.key);
       const mapping = {
         w: 'forward',
         a: 'left',
@@ -9,7 +8,7 @@ class KeyListener {
         d: 'right',
         'ArrowLeft': 'turnLeft',
         'ArrowRight': 'turnRight',
-        'ArrowForward': 'shoot',
+        'ArrowUp': 'shoot',
         ' ': 'jump'
       };
 
