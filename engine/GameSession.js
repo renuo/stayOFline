@@ -76,14 +76,13 @@ class GameSession {
   }
 
   update(timePassedMs, msTimePassedSinceUpdate) {
-    debug(this.player.position);
+    // debug(this.player.position);
     this.checkGameState();
 
     this.world.light.position = this.world.camera.positionVector;
     this.world.light.position[1] += 1.5;
 
     const secondsPassedSinceUpdate = msTimePassedSinceUpdate / 1000;
-    this.updatePlayerMovement(secondsPassedSinceUpdate);
     this.updatePlayerGravity(secondsPassedSinceUpdate);
     this.updatePlayerPosition(secondsPassedSinceUpdate);
   }
@@ -103,11 +102,6 @@ class GameSession {
       this.onFailure();
       this.isRunning = false;
     }
-  }
-
-  updatePlayerMovement(dt) {
-    const vz = -6;
-    this.player.v[2] = vz * dt;
   }
 
   updatePlayerGravity(dt) {

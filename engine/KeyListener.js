@@ -5,7 +5,9 @@ class KeyListener {
     } else {
       window.addEventListener('keydown', (event) => {
         const mapping = {
+          w: 'forward',
           a: 'left',
+          s: 'backward',
           d: 'right',
           ' ': 'jump'
         };
@@ -17,14 +19,12 @@ class KeyListener {
 
   static move(dir, world) {
     const v = 0.07;
-    const mapping = {
-      left: -v,
-      right: v,
-    };
 
-    if (mapping[dir] !== undefined) {
-      world.player.v[0] = mapping[dir];
-    }
+    const xMapping = { left: -v,  right: v };
+    const zMapping = { forward: -v, backward: v };
+
+    if (xMapping[dir] !== undefined) { world.player.v[0] = xMapping[dir]; }
+    if (zMapping[dir] !== undefined) { world.player.v[2] = zMapping[dir]; }
 
     if (dir === 'jump' && world.player.v[1] === 0) {
       world.player.v[1] += 0.45; // Source: https://www.whatsmyvertical.com/the-physics-of-the-vertical-jump/
