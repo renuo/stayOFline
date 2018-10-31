@@ -95,6 +95,7 @@ class GameSession {
     const secondsPassedSinceUpdate = msTimePassedSinceUpdate / 1000;
     this.updatePlayerGravity(secondsPassedSinceUpdate);
     this.updatePlayerPosition(secondsPassedSinceUpdate);
+    this.updatePlayerRotation(secondsPassedSinceUpdate);
   }
 
   tearDown() {
@@ -160,5 +161,12 @@ class GameSession {
     }
 
     this.player.position = VMath.vectorAdd(position, this.player.v);
+  }
+
+  updatePlayerRotation(dt) {
+    this.player.rotation[0] += this.player.rotationV[0] * dt;
+    this.player.rotation[1] += this.player.rotationV[1] * dt;
+    this.player.rotation[2] += this.player.rotationV[2] * dt;
+    console.log(this.player.rotation)
   }
 }

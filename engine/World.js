@@ -10,6 +10,8 @@ class World {
 
     this.player = this.camera;
     this.player.v = [0, 0, 0];
+    this.player.rotationV = [0, 0, 0];
+    this.player.rotation = [0, 0, 0];
   }
 
   inAnyModel(position) {

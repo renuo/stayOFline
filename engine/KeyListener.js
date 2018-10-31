@@ -9,6 +9,7 @@ class KeyListener {
         d: 'right',
         'ArrowLeft': 'turnLeft',
         'ArrowRight': 'turnRight',
+        'ArrowForward': 'shoot',
         ' ': 'jump'
       };
 
@@ -30,10 +31,12 @@ class KeyListener {
     }
   }
 
-  static rotate(dir, world) {
-    const v = 0.5;
-    const rotationMapping = { turnLeft: -v,  turnRight: v };
+  static turn(dir, world) {
+    const v = 1;
+    const rotationMapping = { turnLeft: v,  turnRight: -v };
 
-    if (rotationMapping[dir] !== undefined) { world.player.rotV[1] = rotationMapping[dir]; }
+    if (rotationMapping[dir] !== undefined) {
+      world.player.rotationV[1] = rotationMapping[dir];
+    }
   }
 }
