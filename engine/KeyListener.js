@@ -1,41 +1,75 @@
 class KeyListener {
-  setupControls(world) {
-    window.addEventListener('keydown', (event) => {
-      const mapping = {
-        w: 'forward',
-        a: 'left',
-        s: 'backward',
-        d: 'right',
-        'ArrowLeft': 'turnLeft',
-        'ArrowRight': 'turnRight',
-        'ArrowUp': 'shoot',
-        ' ': 'jump'
-      };
+  constructor(world) {
+    this.world = world;
 
-      KeyListener.move(mapping[event.key], world);
-      KeyListener.turn(mapping[event.key], world);
+    window.addEventListener('keydown', (event) => {
+      const actionName =  this.keyMap[event.key];
+      if(!actionName) { return; }
+
+      this.actionMap[actionName]();
     });
+
+    window.addEventListener('keyup', (event) => {
+      const actionName =  this.keyMap[event.key];
+      if(!actionName) { return; }
+
+      if(actionName !== 'jump') {
+        this.zeroedActionMap[actionName]();
+      }
+    })
   }
 
-  static move(dir, world) {
-    const v = 0.07;
-    const xMapping = { left: -v,  right: v };
-    const zMapping = { forward: -v, backward: v };
+  get keyMap() {
+    return {
+      'w':          'forward',
+      'a':          'left',
+      's':          'backward',
+      'd':          'right',
+      'ArrowLeft':  'turnLeft',
+      'ArrowRight': 'turnRight',
+      'ArrowUp':    'shoot',
+      ' ':          'jump'
+    };
+  }
 
-    if (xMapping[dir] !== undefined) { world.player.v[0] = xMapping[dir]; }
-    if (zMapping[dir] !== undefined) { world.player.v[2] = zMapping[dir]; }
+  get actionMap() {
+    return this.buildActionMap(1);
+  }
 
-    if (dir === 'jump' && world.player.v[1] === 0) {
-      world.player.v[1] += 0.45; // Source: https://www.whatsmyvertical.com/the-physics-of-the-vertical-jump/
+  get zeroedActionMap() {
+    return this.buildActionMap(0);
+  }
+
+  buildActionMap(directionFactor) {
+    const vPlane = 0.1;
+    const vRotation = 0.7;
+
+    return {
+      'forward':   () => this.move(-vPlane * directionFactor),
+      'backward':  () => this.move(vPlane * directionFactor),
+      'left':      () => this.strave(-vPlane * directionFactor),
+      'right':     () => this.strave(vPlane * directionFactor),
+      'turnLeft':  () => this.turn(vRotation * directionFactor),
+      'turnRight': () => this.turn(-vRotation * directionFactor),
+      'jump':      () => this.jump(0.45 * directionFactor),
     }
   }
 
-  static turn(dir, world) {
-    const v = 1;
-    const rotationMapping = { turnLeft: v,  turnRight: -v };
+  move(velocity) {
+    this.world.player.v[2] = velocity;
+  }
 
-    if (rotationMapping[dir] !== undefined) {
-      world.player.rotationV[1] = rotationMapping[dir];
+  strave(velocity) {
+    this.world.player.v[0] = velocity;
+  }
+
+  turn(velocity) {
+    this.world.player.rotationV[1] = velocity;
+  }
+
+  jump(velocity) {
+    if (this.world.player.v[1] === 0) {
+      this.world.player.v[1] = velocity;
     }
   }
 }
